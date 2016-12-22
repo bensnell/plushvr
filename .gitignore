@@ -17,8 +17,6 @@ Release*/
 .svn/
 *.xcscheme
 *.pbxproj
-*.make
-Makefile
 *.xcconfig
 *.plist
 *.xcodeproj
