@@ -73,7 +73,7 @@ public:
     
     void taste(); // store the current state in its own vector
     vector< vector< float > > tastes;
-    void getTaste(int index); // gets the first element in a vector
+    float getTaste(int index); // gets the first element in a vector
     int tasteCounter = 0;
     
     float cook;

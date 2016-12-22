@@ -213,11 +213,11 @@ void Ingr::taste() {
 }
 
 // -----------------------------------------------------------
-void Ingr::getTaste(int index) {
+float Ingr::getTaste(int index) {
     
     if (index < 0 || index >= tastes.size()) {
         cout << "Taste Index is out of range" << endl;
-        return;
+        return 0;
     }
     
     if (tastes[index].size() == 0) {
