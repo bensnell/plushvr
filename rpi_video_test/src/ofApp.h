@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "Fps.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -9,6 +10,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -26,15 +28,21 @@ class ofApp : public ofBaseApp{
     
     string asciiCharacters;
     
-    int deviceID = 1;
+    ofParameter<int> deviceID;
     
-    int stride = 5;
-    float stretch = 2;
+    ofParameter<int> stride;
+    ofParameter<float> stretch;
     
-    int camWidth = 300;
-    int camHeight = 200;
+    ofParameter<int> camWidth;
+    ofParameter<int> camHeight;
     
     Fps videoFPS;
+    
+    ofParameterGroup general;
+    ofxPanel panel;
+    string fileName = "settings.xml";
+    
+    ofParameter<int> desiredFPS;
     
     
 

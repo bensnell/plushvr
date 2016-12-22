@@ -3,6 +3,18 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+    general.setName("General");
+    general.add(deviceID.set("Device ID", 0, 0, 10));
+    general.add(camWidth.set("Cam Width", 300, 1, 2000));
+    general.add(camHeight.set("Cam Height", 200, 1, 2000));
+    general.add(stride.set("Stride", 5, 1, 100));
+    general.add(stretch.set("Stretch", 2, 0.0001, 10));
+    general.add(desiredFPS.set("Desired FPS", 30, 1, 120));
+    
+    panel.setup();
+    panel.add(general);
+    panel.loadFromFile(fileName);
+    
     // First, list all of the ids of the devices
 
     vector<ofVideoDevice> devices = grabber.listDevices();
@@ -15,7 +27,7 @@ void ofApp::setup(){
     }
     
     grabber.setDeviceID(deviceID);
-    grabber.setDesiredFrameRate(30);
+    grabber.setDesiredFrameRate(desiredFPS);
     
     grabber.setup(camWidth, camHeight);
     
@@ -69,6 +81,12 @@ void ofApp::draw(){
     
     grabber.draw(0, 0);
 
+}
+
+//--------------------------------------------------------------
+void ofApp::exit() {
+    
+    panel.saveToFile(fileName);
 }
 
 //--------------------------------------------------------------
