@@ -1,0 +1,21 @@
+<group>
+	<General_Settings>
+		<Draw_Img>1</Draw_Img>
+		<Draw_Flow>1</Draw_Flow>
+	<Body_Radius>79</Body_Radius>
+	<Max_Mag>10.1735</Max_Mag>
+	<Norm_Hist>0</Norm_Hist>
+		<Norm_Hist_Scale>82.6704</Norm_Hist_Scale>
+	<Num_Stats_Graphed>230</Num_Stats_Graphed>
+	<Max_Var_Graph_Ht>15025</Max_Var_Graph_Ht>
+	<Smooth_Mean>0.772905</Smooth_Mean>
+		<Smooth_Var>0.69894</Smooth_Var>
+	<Conf_Thresh>1283.67</Conf_Thresh>
+		<Conf_Mult>23.2245</Conf_Mult>
+		<Max_Conf>93.6225</Max_Conf>
+	<Smooth_Conf>0.75</Smooth_Conf>
+	<Conf_Power>2.56633</Conf_Power>
+	<Angle_Mask>90</Angle_Mask>
+	</General_Settings>
+<group/>
+</group>
