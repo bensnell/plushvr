@@ -3,10 +3,10 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+    // setup the gui
     general.setName("General");
-    general.add(deviceID.set("Device ID", 0, 0, 10));
-    general.add(camWidth.set("Cam Width", 300, 1, 2000));
-    general.add(camHeight.set("Cam Height", 200, 1, 2000));
+    general.add(camWidth.set("Cam Width", 320, 1, 2000));
+    general.add(camHeight.set("Cam Height", 240, 1, 2000));
     general.add(stride.set("Stride", 5, 1, 100));
     general.add(stretch.set("Stretch", 2, 0.0001, 10));
     general.add(desiredFPS.set("Desired FPS", 30, 1, 120));
@@ -15,21 +15,9 @@ void ofApp::setup(){
     panel.add(general);
     panel.loadFromFile(fileName);
     
-    // First, list all of the ids of the devices
-
-    vector<ofVideoDevice> devices = grabber.listDevices();
-    for(int i = 0; i < devices.size(); i++){
-        if(devices[i].bAvailable){
-            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName;
-        }else{
-            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName << " - unavailable ";
-        }
-    }
-    
-    grabber.setDeviceID(deviceID);
+    // setup the video grabber
     grabber.setDesiredFrameRate(desiredFPS);
-    
-    grabber.setup(camWidth, camHeight);
+    grabber.initGrabber(camWidth, camHeight);
     
     asciiCharacters =  string("  ..,,,'''``--_:;^^**""=+<>iv%&xclrs)/){}I?!][1taeo7zjLunT#@JCwfy325Fp6mqSghVd4EgXPGZbYkOA8U$KHDBWNMR0Q");
 
@@ -45,7 +33,7 @@ void ofApp::update(){
         
         videoFPS.addFrame();
         
-        ofPixelsRef pixelsRef = grabber.getPixels();
+        ofPixels &pixels = grabber.getPixels();
         
         stringstream ss;
         
@@ -56,7 +44,7 @@ void ofApp::update(){
             for (int col = 0; col < camWidth; col += stride){
                 
                 // get the pixel and its lightness (lightness is the average of its RGB values)
-                float lightness = pixelsRef.getColor(col,row).getLightness();
+                float lightness = pixels.getColor(col,row).getLightness();
                 
                 // calculate the index of the character from our asciiCharacters array
                 int character = powf( ofMap(lightness, 0, 255, 0, 1), 2.5) * asciiCharacters.size();
@@ -78,8 +66,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-    grabber.draw(0, 0);
 
 }
 

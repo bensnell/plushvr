@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "Fps.h"
 #include "ofxGui.h"
+#include "RPiVideoGrabber.h"
 
 class ofApp : public ofBaseApp{
 
@@ -24,11 +25,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    ofVideoGrabber grabber;
+    RPiVideoGrabber grabber;
     
     string asciiCharacters;
-    
-    ofParameter<int> deviceID;
     
     ofParameter<int> stride;
     ofParameter<float> stretch;
