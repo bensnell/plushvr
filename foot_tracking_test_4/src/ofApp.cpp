@@ -521,7 +521,7 @@ void ofApp::drawAsciiDirection(int size, float direction, float scale) {
 
     stringstream ss;
     
-    float angle = direction/180.*pi;
+    float angle = direction/180.*3.141592654;
     float magnitude = scale * size/2;
     float px = - magnitude * cos(angle);
     float py = magnitude * sin(angle);

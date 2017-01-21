@@ -4,7 +4,7 @@
 #include "ofxCv.h"
 #include "ofxGui.h"
 #include "Ingr.h"
-//#include "RPiVideoGrabber.h"
+#include "RPiVideoGrabber.h"
 #include "Fps.h"
 
 class ofApp : public ofBaseApp{

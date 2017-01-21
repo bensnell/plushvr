@@ -44,7 +44,7 @@ void ofApp::update(){
             for (int col = 0; col < camWidth; col += stride){
                 
                 // get the pixel and its lightness (lightness is the average of its RGB values)
-                float lightness = pixels.getColor(col,row).getLightness();
+                float lightness = 255 - pixels.getColor(col,row).getLightness();
                 
                 // calculate the index of the character from our asciiCharacters array
                 int character = powf( ofMap(lightness, 0, 255, 0, 1), 2.5) * asciiCharacters.size();

@@ -1,7 +1,7 @@
 <group>
 	<General>
 		<Draw_Flow>1</Draw_Flow>
-		<Body_Radius>79</Body_Radius>
+		<Body_Radius>40</Body_Radius>
 		<Max_Mag>10</Max_Mag>
 		<Norm_Hist>0</Norm_Hist>
 		<Norm_Hist_Scale>44.4434</Norm_Hist_Scale>
@@ -17,8 +17,8 @@
 	<Output_Video>0</Output_Video>
 		<Output_Direction>1</Output_Direction>
 		<Output_FPS>1</Output_FPS>
-	<Image_Width>256</Image_Width>
-		<Image_Height>144</Image_Height>
+	<Image_Width>128</Image_Width>
+		<Image_Height>72</Image_Height>
 	</General>
 	<Direction>
 		<Min>0</Min>
