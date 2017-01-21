@@ -16,7 +16,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     // setup gui
     params.setName(name);
     params.add(min.set("Min", inLowerBound, inLowerBound, inUpperBound/4));
-    params.add(max.set("Max", inUpperBound, inUpperBound/2, inUpperBound));
+    params.add(max.set("Max", inUpperBound, inUpperBound/5, inUpperBound));
     params.add(power.set("Power", 1, 0, 4));
     params.add(bInvert.set("Invert", false));
     params.add(bDifference.set("Difference", false));
