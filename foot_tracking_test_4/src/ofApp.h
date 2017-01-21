@@ -96,7 +96,7 @@ class ofApp : public ofBaseApp{
     string settingsFilename = "settings.xml";
     
     ofParameterGroup general;
-    ofParameter<bool> bDrawImage;
+    ofParameter<bool> bDrawImage; // <-- REMOVE THIS!
     ofParameter<bool> bDrawFlow;
     ofParameter<int> bodyRadius;
     ofParameter<float> maxMagnitude;
