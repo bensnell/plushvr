@@ -26,7 +26,9 @@ Release*/
 # Ignore everything in bin except for data and libs folder
 /*/bin/
 !/*/bin/data/
+!/*/bin/data/*
 !/*/bin/libs/
+!/*/bin/libs/*
 
 #XCode
 *.pbxuser
