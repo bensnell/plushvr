@@ -1,3 +1,2 @@
 ofxGui
-ofxRPiCameraVideoGrabber
 ofxXmlSettings
