@@ -6,28 +6,92 @@
 class RPiVideoGrabber: public ofBaseVideoGrabber
 {
 public:
-    RPiVideoGrabber();
+    RPiVideoGrabber() {
+        cameraWidth = 0;
+        cameraHeight = 0;
+        didInit = false;
+        hasNewFrame = true;
+    };
     
-    bool setup(int w, int h);
-    bool initGrabber(int w, int h);
-    bool isFrameNew() const;
-    int getFrameRate();
-    void update();
-    float getHeight() const;
-    float getWidth() const;
-    ofTexture* getTexturePtr();
-    vector<ofVideoDevice>	listDevices() const;
-    void setDesiredFrameRate(int framerate);
-    void close();
-    bool setPixelFormat(ofPixelFormat pixelFormat);
-    ofPixelFormat getPixelFormat() const;
-    ofPixels&		getPixels();
-    const ofPixels& getPixels() const;
-    void videoSettings();
-    bool isInitialized() const;
+    bool setup(int w, int h) {
+        return initGrabber(w, h);
+    };
+    bool initGrabber(int w, int h) {
+        
+        
+        omxCameraSettings.width = w;
+        omxCameraSettings.height = h;
+        omxCameraSettings.enablePixels = true;
+        cameraWidth = w;
+        cameraHeight = h;
+        
+        omxCameraSettings.enableTexture = true; //default true
+        videoGrabber.setup(omxCameraSettings);
+        videoGrabber.enablePixels();
+        
+        pixels.setFromExternalPixels((unsigned char *)videoGrabber.getPixels(), cameraWidth, cameraHeight, OF_PIXELS_RGBA);
+        
+        didInit = true;
+        return didInit;
+    };
+    bool isFrameNew() const {
+        return hasNewFrame;
+    };
+    int getFrameRate() {
+        return omxCameraSettings.framerate;
+    };
+    void update() {
+        hasNewFrame = videoGrabber.isFrameNew();
+    };
+    float getHeight() const {
+        return cameraHeight;
+    };
+    float getWidth() const {
+        return cameraWidth;
+    };
+    ofTexture* getTexturePtr() {
+        return &videoGrabber.textureEngine->fbo.getTexture();
+    };
+    vector<ofVideoDevice>	listDevices() const {
+        ofLogError(__func__) << "you don't need to call this";
+        return unused;
+    };
+    void setDesiredFrameRate(int framerate) {
+        omxCameraSettings.framerate = framerate;
+    };
+    void close() {
+        videoGrabber.close();
+    };
+    bool setPixelFormat(ofPixelFormat pixelFormat) {
+        if (pixelFormat == OF_PIXELS_RGBA)
+        {
+            return true;
+        }
+        return false;
+    };
+    ofPixelFormat getPixelFormat() const {
+        return OF_PIXELS_RGBA;
+        
+    };
+    ofPixels&		getPixels() {
+        return pixels;
+    };
+    const ofPixels& getPixels() const {
+        return pixels;
+    };
+    void videoSettings() {
+        ofLogError(__func__) << "not used";
+    };
+    bool isInitialized() const {
+        return didInit;
+    };
     
-    void draw(int x, int y);
-    void draw(int x, int y, int width, int height); 
+    void draw(int x, int y) {
+        videoGrabber.getTextureReference().draw(x, y);
+    };
+    void draw(int x, int y, int width, int height) {
+        videoGrabber.getTextureReference().draw(x, y, width, height);
+    };
     ofxRPiCameraVideoGrabber videoGrabber;
     
     float cameraWidth;
