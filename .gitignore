@@ -1,3 +1,7 @@
+# Ignore all files in bin except all subdirectories
+*/bin/*
+!*/bin/*/
+
 # Logs
 *.txt
 
@@ -23,12 +27,7 @@ Release*/
 *.plist
 *.xcconfig
 
-# Ignore everything in bin except for data and libs folder
-/*/bin/*
-!/*/bin/data/
-!/*/bin/data/*
-!/*/bin/libs/
-!/*/bin/libs/*
+
 
 #XCode
 *.pbxuser
