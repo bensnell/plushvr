@@ -3,7 +3,9 @@
 #include "ofMain.h"
 #include "Fps.h"
 #include "ofxGui.h"
-#include "RPiVideoGrabber.h"
+#ifdef __arm__
+    #include "RPiVideoGrabber.h"
+#endif
 
 class ofApp : public ofBaseApp{
 
@@ -25,7 +27,11 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+#ifdef __arm__
     RPiVideoGrabber grabber;
+#else
+    ofVideoGrabber grabber;
+#endif
     
     string asciiCharacters;
     

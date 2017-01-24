@@ -16,6 +16,9 @@ void ofApp::setup(){
     panel.loadFromFile(fileName);
     
     // setup the video grabber
+#ifndef __arm__
+    grabber.setDeviceID(1);
+#endif
     grabber.setDesiredFrameRate(desiredFPS);
     grabber.initGrabber(camWidth, camHeight);
     
@@ -66,6 +69,8 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    grabber.draw(0, 0);
 
 }
 

@@ -1,7 +1,7 @@
 <group>
 	<General>
-		<Cam_Width>128</Cam_Width>
-		<Cam_Height>72</Cam_Height>
+		<Cam_Width>256</Cam_Width>
+		<Cam_Height>144</Cam_Height>
 		<Stride>5</Stride>
 		<Stretch>2</Stretch>
 		<Desired_FPS>60</Desired_FPS>
