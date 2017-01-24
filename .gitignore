@@ -23,9 +23,10 @@ Release*/
 *.plist
 *.xcconfig
 
-# Ignore everything in bin except for data folder
+# Ignore everything in bin except for data and libs folder
 /*/bin/
 !/*/bin/data/
+!/*/bin/libs/
 
 #XCode
 *.pbxuser
