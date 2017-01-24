@@ -50,23 +50,6 @@ void ofApp::update(){
     roll  *= 180.0f / PI;
     
     cout << "Yaw:\t" << yaw << "\tPitch:\t" << pitch << "\tRoll:\t" << roll << endl;
-    
-    
-//    // Apply a complementary filter
-//    accXangle = (atan2(yacc, zacc) * RAD_TO_DEG);
-//    accYangle = (atan2(xacc, zacc) * RAD_TO_DEG);
-//    accZangle = (atan2(xacc, yacc) * RAD_TO_DEG);
-//    gyroXrate = xgyr / 16.5;
-//    gyroYrate = ygyr / 16.5;
-//    gyroZrate = zgyr / 16.5;
-//    timer = ofGetElapsedTimeMillis();
-//    
-//    gyroXAngle += gyroXrate * (ofGetElapsedTimeMillis() - timer) / 1000;
-//    gyroYAngle += gyroYrate * (ofGetElapsedTimeMillis() - timer) / 1000;
-//    gyroZAngle += gyroZrate * (ofGetElapsedTimeMillis() - timer) / 1000;
-//    compAngleX = ap * (compAngleX + gyroXAngle) + (1 - ap) * accXangle;
-//    compAngleY = ap * (compAngleY + gyroYAngle) + (1 - ap) * accYangle;
-//    compAngleZ = ap * (compAngleZ + gyroZAngle) + (1 - ap) * accZangle;
 
 }
 

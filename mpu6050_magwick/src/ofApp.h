@@ -25,13 +25,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     I2CBus * bus;
-    float ap = 0.955;
-    double compAngleX, compAngleY,compAngleZ, timer;
-    double accXangle , accYangle, accZangle;
-    double gyroXrate , gyroYrate, gyroZrate;
-    double gyroXAngle, gyroYAngle, gyroZAngle;
-    string temperature;
 
+    string temperature;
     
     float ax, ay, az;       // Stores the real accel value in g's
     float gx, gy, gz;       // Stores the real gyro value in degrees per seconds
