@@ -5,11 +5,11 @@
 #include "ofxGui.h"
 #ifdef __arm__
     #include "../bin/libs/ofxRPiCameraVideoGrabber/RPiVideoGrabber.h"
-    #include "../bin/libs/ofxRPiCameraVideoGrabber/BaseEngine.cpp"
-    #include "../bin/libs/ofxRPiCameraVideoGrabber/DirectEngine.cpp"
-    #include "../bin/libs/ofxRPiCameraVideoGrabber/ofxRPiCameraVideoGrabber.cpp"
-    #include "../bin/libs/ofxRPiCameraVideoGrabber/RPiVideoGrabber.cpp"
-    #include "../bin/libs/ofxRPiCameraVideoGrabber/TextureEngine.cpp"
+//    #include "../bin/libs/ofxRPiCameraVideoGrabber/BaseEngine.cpp"
+//    #include "../bin/libs/ofxRPiCameraVideoGrabber/DirectEngine.cpp"
+//    #include "../bin/libs/ofxRPiCameraVideoGrabber/ofxRPiCameraVideoGrabber.cpp"
+//    #include "../bin/libs/ofxRPiCameraVideoGrabber/RPiVideoGrabber.cpp"
+//    #include "../bin/libs/ofxRPiCameraVideoGrabber/TextureEngine.cpp"
 #endif
 
 class ofApp : public ofBaseApp{
