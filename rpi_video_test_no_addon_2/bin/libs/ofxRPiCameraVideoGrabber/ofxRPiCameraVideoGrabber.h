@@ -1111,6 +1111,13 @@ public:
             getDisplayManager()->options.doMirror = doMirror;
         }
     };
+    
+    bool doExit = false;
+    void signal_handler(int signum)
+    {
+        cout << "ofxRPiCameraVideoGrabber caught signal " << signum;
+        doExit = true;
+    }
 
 private:
     ofTexture errorTexture;
@@ -1546,12 +1553,9 @@ private:
     
     OMX_CONFIG_BOOLEANTYPE disableSoftwareSharpenConfig;
     OMX_CONFIG_BOOLEANTYPE disableSoftwareSaturationConfig;
+    
+
 	
 };
 
-bool doExit = false;
-void signal_handler(int signum)
-{
-    cout << "ofxRPiCameraVideoGrabber caught signal " << signum;
-    doExit = true;
-}
+
