@@ -34,6 +34,14 @@ enum ROTATION
     ROTATION_270=270,
 };
 
+bool doExit = false;
+
+void signal_handler(int signum)
+{
+    cout << "ofxRPiCameraVideoGrabber caught signal " << signum;
+    doExit = true;
+}
+
 class ofxRPiCameraVideoGrabber
 {
 
@@ -1112,12 +1120,6 @@ public:
         }
     };
     
-    bool doExit = false;
-    void signal_handler(int signum)
-    {
-        cout << "ofxRPiCameraVideoGrabber caught signal " << signum;
-        doExit = true;
-    }
 
 private:
     ofTexture errorTexture;
