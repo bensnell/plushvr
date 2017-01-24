@@ -24,7 +24,7 @@ Release*/
 *.xcconfig
 
 # Ignore everything in bin except for data and libs folder
-/*/bin/
+/*/bin/*
 !/*/bin/data/
 !/*/bin/data/*
 !/*/bin/libs/
