@@ -1,0 +1,30 @@
+<group>
+	<General>
+		<Cam_Width>256</Cam_Width>
+		<Cam_Height>144</Cam_Height>
+		<Stride>5</Stride>
+		<Stretch>2</Stretch>
+		<Desired_FPS>60</Desired_FPS>
+	</General>
+<group/>
+<Optical_Flow>
+		<Do_Optical_Flow>1</Do_Optical_Flow>
+		<fbPyrScale>0.5</fbPyrScale>
+		<fbLevels>4</fbLevels>
+		<fbIterations>2</fbIterations>
+		<fbPolyN>7</fbPolyN>
+		<fbPolySigma>1.5</fbPolySigma>
+		<fbUseGaussian>0</fbUseGaussian>
+		<winSize>32</winSize>
+	</Optical_Flow>
+	<Rendering>
+		<Window_Width>1024</Window_Width>
+		<Window_Height>768</Window_Height>
+		<Draw_Video>0</Draw_Video>
+		<Draw_Flow>0</Draw_Flow>
+		<Draw_FPS>0</Draw_FPS>
+		<Output_Ascii_Video>0</Output_Ascii_Video>
+		<Output_FPS>1</Output_FPS>
+	<Draw_Gui>0</Draw_Gui>
+	</Rendering>
+</group>
