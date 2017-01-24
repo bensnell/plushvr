@@ -8,7 +8,7 @@
 		<Num_Stats_Graphed>55</Num_Stats_Graphed>
 		<Angle_Mask>90</Angle_Mask>
 	<Draw_Img>0</Draw_Img>
-	<Desired_FPS>30</Desired_FPS>
+	<Desired_FPS>60</Desired_FPS>
 		<Live>1</Live>
 		<Video_Name>tracking_test_1920x1080_30fps.mp4</Video_Name>
 	<Draw_All>0</Draw_All>
