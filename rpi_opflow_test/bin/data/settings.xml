@@ -1,7 +1,7 @@
 <group>
 	<General>
-		<Cam_Width>256</Cam_Width>
-		<Cam_Height>144</Cam_Height>
+		<Cam_Width>128</Cam_Width>
+		<Cam_Height>72</Cam_Height>
 		<Stride>5</Stride>
 		<Stretch>2</Stretch>
 		<Desired_FPS>60</Desired_FPS>
@@ -10,12 +10,12 @@
 <Optical_Flow>
 		<Do_Optical_Flow>1</Do_Optical_Flow>
 		<fbPyrScale>0.5</fbPyrScale>
-		<fbLevels>4</fbLevels>
-		<fbIterations>2</fbIterations>
-		<fbPolyN>7</fbPolyN>
-		<fbPolySigma>1.5</fbPolySigma>
+		<fbLevels>5</fbLevels>
+		<fbIterations>1</fbIterations>
+		<fbPolyN>5</fbPolyN>
+		<fbPolySigma>1.1</fbPolySigma>
 		<fbUseGaussian>0</fbUseGaussian>
-		<winSize>32</winSize>
+		<winSize>20</winSize>
 	</Optical_Flow>
 	<Rendering>
 		<Window_Width>1024</Window_Width>
