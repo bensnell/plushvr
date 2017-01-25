@@ -1,4 +1,5 @@
 ofxCv
 ofxGui
 ofxOpenCv
+ofxRPiCameraVideoGrabber
 ofxXmlSettings

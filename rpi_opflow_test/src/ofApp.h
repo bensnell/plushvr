@@ -4,9 +4,10 @@
 #include "Fps.h"
 #include "ofxGui.h"
 #ifdef __arm__
-    #include "../bin/libs/ofxRPiCameraVideoGrabber/RPiVideoGrabber.h"
+    #include "RPiVideoGrabber.h"
 #endif
 #include "ofxCv.h"
+#include "ofxOpenCv.h"
 
 class ofApp : public ofBaseApp{
 

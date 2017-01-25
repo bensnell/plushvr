@@ -76,7 +76,7 @@ void ofApp::update(){
                     float lightness = 255 - pixels.getColor(col,row).getLightness();
                     
                     // calculate the index of the character from our asciiCharacters array
-                    int character = powf( ofMap(lightness, 0, 255, 0, 1), 2.5) * asciiCharacters.size();
+                    int character = powf( ofMap(lightness, 0, 255, 0, 1), 2.5) * (asciiCharacters.size()-1);
                     
                     // draw the character at the correct location
                     ss << ofToString(asciiCharacters[character]);
@@ -121,13 +121,13 @@ void ofApp::draw(){
             ofSetColor(0);
             ofDrawRectangle(0, camHeight, camWidth, camHeight);
             ofPopStyle();
-            fb.draw(0, camHeight);
+            if (bDoFlow) fb.draw(0, camHeight);
         } else {
             ofPushStyle();
             ofSetColor(0);
             ofDrawRectangle(0, 0, camWidth, camHeight);
             ofPopStyle();
-            fb.draw(0, 0);
+            if (bDoFlow) fb.draw(0, 0);
         }
     }
     
@@ -153,6 +153,9 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    
+    if (key == 'g') bDrawGui = !bDrawGui;
+    if (key == 'f') ofToggleFullscreen();
 
 }
 
