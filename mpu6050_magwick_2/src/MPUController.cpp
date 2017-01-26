@@ -166,7 +166,7 @@ void MPUController::MadgwickQuaternionUpdate(float ax, float ay, float az, float
 string MPUController::getStringValues(int precision) {
     
     stringstream ss;
-    ss << setprecision(precision) << "Yaw:\t" << yaw << "\tPitch:\t" << pitch << "\tRoll:\t" << roll;
+    ss << std::fixed << std::setprecision(precision) << "Yaw:\t" << yaw << "\tPitch:\t" << pitch << "\tRoll:\t" << roll;
     return ss.str();
 }
 

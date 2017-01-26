@@ -55,9 +55,9 @@ public:
     // final values
     float pitch, yaw, roll;
     
-    float getPitch() { return pitch };
-    float getYaw() { return yaw };
-    float getRoll() { return roll };
+    float getPitch() { return pitch; };
+    float getYaw() { return yaw; };
+    float getRoll() { return roll; };
     
     // get string value to debug
     string getStringValues(int precision = 0);
