@@ -29,6 +29,7 @@ public:
     void setup(string _name, int _nValues, float inLowerBound, float inUpperBound);
     string name;
     int nValues;
+    void setNumValues(int _nValues);
     
     // Reset
     void trash();
@@ -118,6 +119,8 @@ public:
         {148, 0, 211},
         {255, 20, 147}
     };
+    
+    ofParameter<bool> bDraw = true;
     
     
 };

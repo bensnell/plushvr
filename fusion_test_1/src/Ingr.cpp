@@ -15,6 +15,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     
     // setup gui
     params.setName(name);
+    params.add(bDraw.set("Draw", true));
     params.add(min.set("Min", inLowerBound, inLowerBound, inUpperBound/4));
     params.add(max.set("Max", inUpperBound, inUpperBound/2, inUpperBound));
     params.add(power.set("Power", 1, 0, 4));
@@ -22,12 +23,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     params.add(bDifference.set("Difference", false));
     params.add(easingParam.set("Easing", 0.75, 0, 1));
     
-    if (_nValues < 1) {
-        cout << "Number of values to store must be >= 1" << endl;
-        nValues = 1;
-    } else {
-        nValues = _nValues;
-    }
+    setNumValues(_nValues);
     
     min.addListener(this, &Ingr::updateFloat);
     max.addListener(this, &Ingr::updateFloat);
@@ -35,6 +31,17 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     bInvert.addListener(this, &Ingr::updateBool);
     bDifference.addListener(this, &Ingr::updateBool);
     easingParam.addListener(this, &Ingr::updateFloat);
+}
+
+// -----------------------------------------------------------
+void Ingr::setNumValues(int _nValues) {
+    
+    if (_nValues < 1) {
+        cout << "Number of values to store must be >= 1" << endl;
+        nValues = 1;
+    } else {
+        nValues = _nValues;
+    }
 }
 
 // -----------------------------------------------------------
@@ -73,7 +80,9 @@ void Ingr::insertNew(vector<float> &array, float value, int maxValues) {
     if (!bStoreHistory) return;
     
     array.insert(array.begin(), value);
-    if (array.size() > maxValues) array.pop_back();
+    while (array.size() > maxValues) {
+        array.pop_back();
+    }
 }
 
 // -----------------------------------------------------------
@@ -298,6 +307,8 @@ void Ingr::refresh() {
 
 // -----------------------------------------------------------
 void Ingr::draw(int x, int y, int w, int h, vector<int> indices, bool bMargin, int nRefRegions) {
+    
+    if (!bDraw) return;
     
     vector<ofColor> colors;
     vector<ofPolyline> lines;

@@ -2,10 +2,23 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxOpenCv.h"
 #include "ofxGui.h"
 #include "Ingr.h"
-#include "RPiVideoGrabber.h"
 #include "Fps.h"
+#ifdef __arm__
+    #include "RPiVideoGrabber.h"
+    #include "ofxGPIO.h"
+#endif
+
+#ifndef max
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+#ifndef min
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
+// This app is being built with the rpi in mind (i.e. it can run on both mac and rpi, but the settings are most easily accessed by updating settings.xml, minimal info is draw to screen, etc.)
 
 class ofApp : public ofBaseApp{
 
@@ -31,14 +44,18 @@ class ofApp : public ofBaseApp{
     // ------- CONTENT --------
     // ------------------------
     
+    // Video grabber for live video
+#ifdef __arm__
     RPiVideoGrabber grabber;
-//    ofVideoGrabber grabber;
+#else
+    ofVideoGrabber grabber;
+#endif
     
+    // Video player for recorded video
     ofVideoPlayer player;
     
+    // number of pixels in each frame
     int nPixels;
-    
-    ofPixels pix;
 
     
     // ------------------------
@@ -46,8 +63,6 @@ class ofApp : public ofBaseApp{
     // ------------------------
     
     ofxCv::FlowFarneback flow;
-    
-    float flowFraction = 0.2;
     
     ofPixels thisFrame;
     
@@ -84,6 +99,11 @@ class ofApp : public ofBaseApp{
     Ingr dir;
     Ingr act;
     Ingr mix;
+    Ingr mpuX;  // pitch -- Y change
+    Ingr mpuY;  // roll -- X change
+    Ingr mixX;
+    Ingr mixY;
+    
     
     void drawPredictedMovement(int x, int y, int size);
     
@@ -92,39 +112,73 @@ class ofApp : public ofBaseApp{
     // ------- SETTINGS -------
     // ------------------------
     
-    ofxPanel panel;
-    string settingsFilename = "settings.xml";
+    vector<ofxPanel> panels;
+    int selPanel = 0;
     
-    ofParameterGroup general;
-    ofParameter<bool> bDrawImage; // <-- REMOVE THIS!
-    ofParameter<bool> bDrawFlow;
-    ofParameter<int> bodyRadius;
-    ofParameter<float> maxMagnitude;
-    ofParameter<bool> bNormalizeHistogram;
-    ofParameter<float> histogramScale; // for a normalized histogram
-    ofParameter<int> nStats; // # stats kept in graph
-    ofParameter<float> angleMask; // remove all measurements beyond this angle in degrees from the mean to recalculate the mean and standard deviation
-    ofParameter<int> desiredFPS;
+    string genPanelFilename = "genSettings.xml";
+    string ingrPanelFilename = "ingrSettings.xml";
+    
+    ofParameterGroup generalParams;
+    ofParameter<int> imgW;                  // 256      192     128
+    ofParameter<int> imgH;                  // 144      108     72
     ofParameter<bool> bLive;
+    ofParameter<bool> bLivePause;
     ofParameter<string> videoName;
+    ofParameter<int> desiredFPS;            // of video itself
+
+    // may not be necessary -- may significantly reduce fps
+    ofParameterGroup cvParams;              // cv before calc opflow
+    ofParameter<bool> bNormalize;
+    ofParameter<bool> bHistEqualize;
+    
+    // if polyN = 7, then polySigma = 1.5
+    // if polyN = 5, then polySigma = 1.1
+    ofParameterGroup flowParams;
+    ofParameter<bool> bDoFlow;
+    ofParameter<float> pyramidScale;
+    ofParameter<int> numLevels;             // 3
+    ofParameter<int> windowSize;            // 32
+    ofParameter<int> numIterations;         // 1
+    ofParameter<int> polyN;                 // 3
+    ofParameter<float> polySigma;           // 1.1 ???
+    ofParameter<bool> useGaussian;
+    ofParameter<bool> bRefreshFlowValues;   // toggle this to update all settings
+    void refreshFlowParams();
+    
+    ofParameterGroup statisticsParams;      // for finding variance and mean
+    ofParameter<int> bodyRadius;
+    ofParameter<float> maxMagnitude;        // of the flow rays
+    ofParameter<float> angleMask; // remove all measurements beyond this angle in degrees from the mean to recalculate the mean and standard deviation
+
+    ofParameterGroup ingrParams;            // only set at startup
+    ofParameter<int> nIngrValues;
+    ofParameter<bool> bStoreIngrHistory;
+    
+    ofParameterGroup renderingParams;
+    ofParameter<int> windowW;
+    ofParameter<int> windowH;
+    ofParameter<bool> bNormalizeHistogram;  // for visualization
+    ofParameter<float> histogramScale;      // for a normalized histogram
+    ofParameter<int> ingrW;
+    ofParameter<int> ingrH;
+    ofParameter<float> videoScale;
     ofParameter<bool> bDrawAll;
-    ofParameter<bool> bOutputVideo;
-    ofParameter<bool> bOutputDirection;
-    ofParameter<bool> bOutputFPS;
-//    ofParameter<bool> bNormalizeImage; // could try this
+    ofParameter<bool> bDrawNone;            // must be false to draw anything
+    ofParameter<bool> bDrawGui;
+    ofParameter<bool> bDrawFPS;
+    ofParameter<bool> bDrawVideo;
+    ofParameter<bool> bDrawArrow;
+    ofParameter<bool> bDrawCV;
+    ofParameter<bool> bDrawFlow;
+    ofParameter<bool> bDrawHistogram;
+    void updateDrawingSettings();
+    
+    ofParameterGroup outputParams;            // output to terminal
+    ofParameter<bool> bOutputAscii;
     ofParameter<int> stride;
     ofParameter<float> stretch;
-    ofParameter<int> imgW;
-    ofParameter<int> imgH;
-    
-    ofParameterGroup flowParams;
-    ofParameter<float> pyramidScale;
-    ofParameter<int> numLevels;
-    ofParameter<int> windowSize;
-    ofParameter<int> numIterations;
-    ofParameter<int> polyN;
-    ofParameter<float> polySigma;
-    ofParameter<bool> useGaussian;
+    ofParameter<bool> bOutputFPS;
+    ofParameter<bool> bOutputDirection;
     
     
     
@@ -136,15 +190,16 @@ class ofApp : public ofBaseApp{
     
     float map(float param, float minIn, float maxIn, float minOut, float maxOut, bool bClamp);
     
-    string asciiChar;
     
     Fps videoFPS;
     
     void drawAscii(ofPixels &pixels, int w, int h, int _stride, float _stretch);
+    string asciiChar;
     
     // direction between 0 and 360
     // scale between 0 and 1
     // size must be odd
     void drawAsciiDirection(int size, float direction, float scale);
+    
     
 };

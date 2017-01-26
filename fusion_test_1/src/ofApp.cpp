@@ -5,34 +5,28 @@ using namespace cv;
 
 // TODO:
 // Movement suppressed by a change in roll or pitch (this sketch already suppresses yaw, though we can further suppress it)
+// For some reason, MIN and MAX are not defined here...
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     
     // -------------- SETUP GUI ---------------
     
-    general.setName("General");
-    general.add(bDrawImage.set("Draw Img", true));
-    general.add(bDrawFlow.set("Draw Flow", true));
-    general.add(bodyRadius.set("Body Radius", 50, 1, 200));
-    general.add(maxMagnitude.set("Max Mag", 10, 1, 30));
-    general.add(bNormalizeHistogram.set("Norm Hist", true));
-    general.add(histogramScale.set("Norm Hist Scale", 1, 0.1, 100));
-    general.add(nStats.set("Num Stats Graphed", 50, 10, 500));
-    general.add(angleMask.set("Angle Mask", 90, 45, 135));
-    general.add(desiredFPS.set("Desired FPS", 30, 1, 120));
-    general.add(bLive.set("Live", true));
-    general.add(videoName.set("Video Name", "tracking_test_1920x1080_30fps.mp4"));
-    general.add(bDrawAll.set("Draw All", false));
-    general.add(stride.set("Stride", 5, 1, 100));
-    general.add(stretch.set("Stretch", 2, 0.001, 10));
-    general.add(bOutputVideo.set("Output Video", false));
-    general.add(bOutputDirection.set("Output Direction", false));
-    general.add(bOutputFPS.set("Output FPS", true));
-    general.add(imgW.set("Image Width", 256, 1, 2000));
-    general.add(imgH.set("Image Height", 144, 1, 2000));
+    generalParams.setName("General Params");
+    generalParams.add(imgW.set("Image Width", 128, 1, 2000));
+    generalParams.add(imgH.set("Image Height", 72, 1, 2000));
+    generalParams.add(bLive.set("Live", true));
+    generalParams.add(bLivePause.set("Pause Live", false));
+    generalParams.add(videoName.set("Video Name", "tracking_test_128x72_30fps.mp4"));
+    generalParams.add(desiredFPS.set("Desired FPS", 60, 1, 120));
     
-    flowParams.setName("Optical Flow");
+    cvParams.setName("CV Params");
+    cvParams.add(bNormalize.set("Normalize", false));
+    cvParams.add(bHistEqualize.set("Hist Equalization", false));
+
+    // these settings work for sure on 256 x 144, but may not on lower resolutions or slower systems
+    flowParams.setName("Optical Flow Params");
+    flowParams.add(bDoFlow.set("Do Op Flow", true));
     flowParams.add(pyramidScale.set("Pyramid Scale", 0.5, 0, 10));
     flowParams.add(numLevels.set("Num Levels", 4, 1, 10));
     flowParams.add(windowSize.set("Window Size", 10, 1, 50));
@@ -40,25 +34,113 @@ void ofApp::setup(){
     flowParams.add(polyN.set("Poly N", 7, 1, 20));
     flowParams.add(polySigma.set("Poly Sigma", 1.5, 0.01, 10));
     flowParams.add(useGaussian.set("Use Gaussian", false));
+    flowParams.add(bRefreshFlowValues.set("Refresh Params", false));
+
+    statisticsParams.setName("Statistics Params");
+    statisticsParams.add(bodyRadius.set("Body Radius", 38, 1, 200));
+    statisticsParams.add(maxMagnitude.set("Max Mag", 10, 1, 30));
+    statisticsParams.add(angleMask.set("Angle Mask", 90, 45, 135));
+    
+    ingrParams.setName("Ingredient Params");
+    ingrParams.add(nIngrValues.set("Num Values", 300));
+    ingrParams.add(bStoreIngrHistory.set("Store History", true));
+    
+    renderingParams.setName("Rendering Params");
+    renderingParams.add(windowW.set("Window Width", 1024, 1, 2000));
+    renderingParams.add(windowH.set("Window Height", 768, 1, 2000));
+    renderingParams.add(bNormalizeHistogram.set("Norm Hist", true));
+    renderingParams.add(histogramScale.set("Norm Hist Scale", 45, 0.1, 100));
+    renderingParams.add(ingrW.set("Ingr Width", 500, 1, 1000));
+    renderingParams.add(ingrH.set("Ingr Height", 150, 1, 500));
+    renderingParams.add(videoScale.set("Video Scale", 2, 0.1, 5));
+    renderingParams.add(bDrawAll.set("Draw All", false));
+    renderingParams.add(bDrawNone.set("Draw None", false));
+    renderingParams.add(bDrawGui.set("Draw Gui", false));
+    renderingParams.add(bDrawFPS.set("Draw FPS", true));
+    renderingParams.add(bDrawVideo.set("Draw Video", true));
+    renderingParams.add(bDrawArrow.set("Draw Arrow", true));
+    renderingParams.add(bDrawCV.set("Draw CV", false));
+    renderingParams.add(bDrawFlow.set("Draw Flow", false));
+    renderingParams.add(bDrawHistogram.set("Draw Histogram", false));
+
+    outputParams.setName("Output Params");
+    outputParams.add(bOutputAscii.set("Output Ascii Video", false));
+    outputParams.add(stride.set("Stride", 5, 1, 100));
+    outputParams.add(stretch.set("Stretch", 2, 0.001, 10));
+    outputParams.add(bOutputFPS.set("Output FPS", false));
+    outputParams.add(bOutputDirection.set("Output Direction", false));
     
     dir.setup("Direction", 300, 0, 360);
     var.setup("Variance", 300, 0, 3000);
     act.setup("Activity", 300, 0, 5);
     mix.setup("Mix", 300, 0, 1);
+    mpuX.setup("MPU X", 300, 0, 15);
+    mpuY.setup("MPU Y", 300, 0, 15);
+    mixX.setup("Mix X", 300, 0, 1);
+    mixY.setup("Mix Y", 300, 0, 1);
     
-    panel.setup();
-    panel.add(general);
-    panel.add(flowParams);
-    panel.add(dir.params);
-    panel.add(var.params);
-    panel.add(act.params);
-    panel.add(mix.params);
-    panel.loadFromFile(settingsFilename);
+    // setup panels
+    
+    panels.push_back(*(new ofxPanel()));
+    panels.push_back(*(new ofxPanel()));
+    
+    panels[0].setup();
+    panels[0].setName("General Settings");
+    panels[0].add(generalParams);
+    panels[0].add(cvParams);
+    panels[0].add(flowParams);
+    panels[0].add(statisticsParams);
+    panels[0].add(ingrParams);
+    panels[0].add(renderingParams);
+    panels[0].add(outputParams);
+    panels[0].loadFromFile(genPanelFilename);
+    
+    panels[1].setup();
+    panels[1].setName("Ingr Settings");
+    panels[1].add(dir.params);
+    panels[1].add(var.params);
+    panels[1].add(act.params);
+    panels[1].add(mix.params);
+    panels[1].add(mpuX.params);
+    panels[1].add(mpuY.params);
+    panels[1].add(mixX.params);
+    panels[1].add(mixY.params);
+    panels[1].loadFromFile(ingrPanelFilename);
+    
+    // update settings from those loaded
+    
+    bRefreshFlowValues = false;
+    bLivePause = false;
+    
+    // set the shape of the window
+    ofSetWindowShape(windowW, windowH);
+    
+    // update the number of values stored               -- UDPDATE FOR NEW INGR
+    dir.setNumValues(nIngrValues);
+    var.setNumValues(nIngrValues);
+    act.setNumValues(nIngrValues);
+    mix.setNumValues(nIngrValues);
+    mpuX.setNumValues(nIngrValues);
+    mpuY.setNumValues(nIngrValues);
+    mixX.setNumValues(nIngrValues);
+    mixY.setNumValues(nIngrValues);
+    
+    dir.bStoreHistory = bStoreIngrHistory;
+    var.bStoreHistory = bStoreIngrHistory;
+    act.bStoreHistory = bStoreIngrHistory;
+    mix.bStoreHistory = bStoreIngrHistory;
+    mpuX.bStoreHistory = bStoreIngrHistory;
+    mpuY.bStoreHistory = bStoreIngrHistory;
+    mixX.bStoreHistory = bStoreIngrHistory;
+    mixY.bStoreHistory = bStoreIngrHistory;
+    
     
     // -------------- SETUP VIDEO ----------------
     
     if (bLive) {
-//        grabber.setDeviceID(1);
+#ifndef __arm__
+        grabber.setDeviceID(1);
+#endif
         grabber.setDesiredFrameRate(desiredFPS);
         grabber.initGrabber(imgW, imgH);
     } else {
@@ -69,13 +151,7 @@ void ofApp::setup(){
     
     // ------------ SETUP FLOW --------------
     
-    flow.setPyramidScale(pyramidScale);
-    flow.setNumLevels(numLevels);
-    flow.setWindowSize(windowSize);
-    flow.setNumIterations(numIterations);
-    flow.setPolyN(polyN);
-    flow.setPolySigma(polySigma);
-    flow.setUseGaussian(useGaussian);
+    refreshFlowParams();
     
     thisFrame.allocate(imgW, imgH, OF_PIXELS_RGB);
     
@@ -101,8 +177,6 @@ void ofApp::setup(){
     }
     
     asciiChar =  string("  ..,,,'''``--_:;^^**""=+<>iv%&xclrs)/){}I?!][1taeo7zjLunT#@JCwfy325Fp6mqSghVd4EgXPGZbYkOA8U$KHDBWNMR0Q");
-    
-    pix.allocate(imgW, imgH, OF_PIXELS_RGB);
 
 
 }
@@ -111,10 +185,15 @@ void ofApp::setup(){
 void ofApp::update(){
     
     if (bLive) {
-        grabber.update();
+        // if it's paused, don't take in any new video
+        if (!bLivePause) grabber.update();
     } else {
         player.update();
     }
+    
+    // update settings
+    if (bRefreshFlowValues) refreshFlowParams();
+    updateDrawingSettings();
     
     // determine if we have a new frame
     if (bLive ? grabber.isFrameNew() : (player.getCurrentFrame() != prevFrame)) {
@@ -122,78 +201,273 @@ void ofApp::update(){
 
         videoFPS.addFrame();
         
-        if (bLive) {
-            flow.calcOpticalFlow(grabber);
-        } else {
-            player.getPixels().resizeTo(thisFrame);
-            flow.calcOpticalFlow(thisFrame);
+        if (bDoFlow) {
+            // do optical flow (and optionally cv)
+            if (bLive) {
+                // live video
+                if (bHistEqualize || bNormalize) {
+                    // do cv
+                    thisFrame = grabber.getPixels();
+                    if (bNormalize) ofxCv::normalize(thisFrame);
+                    if (bHistEqualize) ofxCv::equalizeHist(thisFrame);
+                    flow.calcOpticalFlow(thisFrame);
+                } else {
+                    // don't do cv
+                    flow.calcOpticalFlow(grabber);
+                }
+            } else {
+                // recorded video
+                player.getPixels().resizeTo(thisFrame);
+                if (bNormalize) ofxCv::normalize(thisFrame);
+                if (bHistEqualize) ofxCv::equalizeHist(thisFrame);
+                flow.calcOpticalFlow(thisFrame);
+            }
+            
+            // Average the directions
+            calcAverageDirections();
         }
-        
-        // Average the directions
-        calcAverageDirections();
         
         // Draw to the terminal
-        if (bOutputVideo) {
-            drawAscii(bLive ? grabber.getPixels() : player.getPixels(), imgW, imgH, stride, stretch);
-        }
-        if (bOutputDirection) {
-
-            drawAsciiDirection(13, dir.getCook()*360., mix.getCook());
-            
-        }
+        if (bOutputAscii) drawAscii(bLive ? grabber.getPixels() : player.getPixels(), imgW, imgH, stride, stretch);
+        if (bOutputDirection) drawAsciiDirection(13, dir.getCook()*360., mix.getCook());
         
         // output the frame rate
         videoFPS.update();
         if (bOutputFPS) {
-            cout << "Video FPS:\t" << ofToString(videoFPS.getFPS()) << "\tApp FPS\t" << ofToString(ofGetFrameRate()) << endl;
+            stringstream ss;
+            ss << std::fixed << std::setprecision(2) << "Video FPS:\t" << ofToString(videoFPS.getFPS()) << "\tApp FPS\t" << ofToString(ofGetFrameRate());
+            cout << ss.str() << endl;
         }
     }
+    videoFPS.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    if (bDrawNone && !bDrawGui) return;
+    
     ofBackground(0);
     
-    if (!bDrawAll) return;
+    int px = 0;
+    int py = 0;
+    int width = 0;
     
-    // draw the video, flow, and body location
-    if (bLive) {
-        grabber.draw(0, 0, imgW*2, imgH*2);
-    } else {
-        player.draw(0, 0, imgW*2, imgH*2);
+    if (bDrawFPS) {
+        stringstream ss;
+        ss << "Video FPS: " << ofToString(videoFPS.getFPS()) << "\t";
+        ss << "App FPS: " << ofToString(ofGetFrameRate());
+        ofDrawBitmapStringHighlight(ss.str(), 0, 20);
+        
+        py += 25;
     }
-    flow.draw(0, imgH*2, imgW*2, imgH*2);
-    drawBody(0, imgH*2, imgW*2, imgH*2);
-    
-    // plot the histograms of the optical flow directions
-    drawHistogram(bucketsA, nBuckets, 0, imgH*4, imgW*2, imgH);
+    if (bDrawVideo) {
+        
+        // draw video
+        if (bLive) {
+            grabber.draw(px, py, imgW*videoScale, imgH*videoScale);
+        } else {
+            player.draw(px, py, imgW*videoScale, imgH*videoScale);
+        }
+        
+        if (bDrawArrow) {
+        // draw arrow on top
+            drawPredictedMovement(px + imgW*videoScale/2, py + imgH*videoScale/2, min(imgW*videoScale/2, imgH*videoScale/2));
+        }
 
-    // draw the direction of flow
-    dir.draw(imgW*2+10, 0, 500, 150, {}, false, 4);
-    
-    // draw the variance of directions
-    var.draw(imgW*2+10, 160, 500, 150, {}, false);
+        py += imgH*videoScale;
+        width = max(width, imgW*videoScale);
+        
+    }
+    if (bDrawArrow && !bDrawVideo) {
+        
+        drawPredictedMovement(px + imgW*videoScale/2, py + imgH*videoScale/2, min(imgW*videoScale/2, imgH*videoScale/2));
+        
+        py += imgH*videoScale;
+        width = max(width, imgW*videoScale);
+    }
+    if (bDrawCV) {
+        if (py + imgH*videoScale > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        
+        ofImage tmpImg;
+        tmpImg.getPixels() = thisFrame;
+        tmpImg.update();
+        tmpImg.draw(px, py, imgW*videoScale, imgH*videoScale);
+        
+        py += imgH*videoScale;
+        width = max(width, imgW*videoScale);
+    }
+    if (bDrawFlow) {
+        if (py + imgH*videoScale > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        
+        flow.draw(px, py, imgW*videoScale, imgH*videoScale);
+        drawBody(px, py, imgW*videoScale, imgH*videoScale);
+        
+        py += imgH*videoScale;
+        width = max(width, imgW*videoScale);
+    }
+    if (bDrawHistogram) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        
+        // plot the histograms of the optical flow directions
+        drawHistogram(bucketsA, nBuckets, px, py, ingrW, ingrH);
+        
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (dir.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        // draw the direction of flow
+        dir.draw(px, py, ingrW, ingrH, {}, false, 4);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (var.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        // draw the variance of directions
+        var.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (act.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        // draw the activity (average magnitude of flow)
+        act.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (mix.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        // draw the mix
+        mix.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (mpuX.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        mpuX.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (mpuY.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        mpuY.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (mixX.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        mixX.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (mixY.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        mixY.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (bDrawGui) {
+            
+        panels[selPanel].setPosition(ofGetWidth() - panels[selPanel].getWidth() - 10, panels[selPanel].getPosition().y);
+        panels[selPanel].draw();
+    }
+}
 
-    // draw the activity (average magnitude of flow)
-    act.draw(imgW*2+10, 320, 500, 150, {}, false);
+//--------------------------------------------------------------
+void ofApp::updateDrawingSettings() {
     
-    // draw the mix
-    mix.draw(imgW*2+10, 480, 500, 150, {}, false);
-    
-    // draw the predicted movement size and direction
-    drawPredictedMovement(imgW, imgH, 100);
-    
-    // gui
-    panel.setPosition(ofGetWidth() - panel.getWidth() - 10, 10);
-    panel.draw();
-    
-    // debug
-    ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
+    if (bDrawNone) {
+        bDrawAll = false;
+        
+        bDrawFPS = false;
+        bDrawVideo = false;
+        bDrawArrow = false;
+        bDrawFlow = false;
+        bDrawHistogram = false;
+
+        var.bDraw = false;
+        dir.bDraw = false;
+        act.bDraw = false;
+        mix.bDraw = false;
+        mpuX.bDraw = false;
+        mpuY.bDraw = false;
+        mixX.bDraw = false;
+        mixY.bDraw = false;
+        
+    } else if (bDrawAll) {
+        bDrawAll = false;
+        bDrawNone = false;
+        
+        bDrawGui = true;
+        bDrawFPS = true;
+        bDrawVideo = true;
+        bDrawArrow = true;
+        bDrawFlow = true;
+        bDrawHistogram = true;
+        
+        var.bDraw = true;
+        dir.bDraw = true;
+        act.bDraw = true;
+        mix.bDraw = true;
+        mpuX.bDraw = true;
+        mpuY.bDraw = true;
+        mixX.bDraw = true;
+        mixY.bDraw = true;
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
-    panel.saveToFile(settingsFilename);
+    panels[0].saveToFile(genPanelFilename);
+    panels[1].saveToFile(ingrPanelFilename);
+}
+
+//--------------------------------------------------------------
+void ofApp::refreshFlowParams() {
+    
+    bRefreshFlowValues = false;
+    
+    flow.setPyramidScale(pyramidScale);
+    flow.setNumLevels(numLevels);
+    flow.setWindowSize(windowSize);
+    flow.setNumIterations(numIterations);
+    flow.setPolyN(polyN);
+    flow.setPolySigma(polySigma);
+    flow.setUseGaussian(useGaussian);
 }
 
 //--------------------------------------------------------------
@@ -255,8 +529,9 @@ void ofApp::calcAverageDirections() {
         // cout << vec[0] << "\t" << vec[1] << endl;
         
         // find the magnitude and clamp it below the max
-        float dist = MIN(sqrt(ox * ox + oy * oy), (float)maxMagnitude);
+        float dist = min(sqrt(ox * ox + oy * oy), (float)maxMagnitude);
         
+
         sumDist += dist;
         
         // get the angle in degrees
@@ -505,7 +780,7 @@ void ofApp::drawAscii(ofPixels &pixels, int w, int h, int _stride, float _stretc
             float lightness = 255 - pixels.getColor(col,row).getLightness();
             
             // calculate the index of the character from our asciiCharacters array
-            int index = powf( ofMap(lightness, 0, 255, 0, 1), 2.5) * asciiChar.size();
+            int index = powf( ofMap(lightness, 0, 255, 0, 1), 2.5) * (asciiChar.size()-1);
             
             // draw the character at the correct location
             ss << ofToString(asciiChar[index]);
@@ -614,7 +889,11 @@ void ofApp::drawAsciiDirection(int size, float direction, float scale) {
 void ofApp::keyPressed(int key){
 
     if (key == ' ') {
-        player.setPaused(!player.isPaused());
+        if (bLive) {
+            bLivePause = !bLivePause;
+        } else {
+            player.setPaused(!player.isPaused());
+        }
     }
     if (key == OF_KEY_RIGHT) {
         if (player.getCurrentFrame() == player.getTotalNumFrames()-1) {
@@ -640,6 +919,14 @@ void ofApp::keyPressed(int key){
         
     }
     if (key == 'f') ofToggleFullscreen();
+    
+    if (key == OF_KEY_UP) panels[selPanel].setPosition(panels[selPanel].getPosition().x, panels[selPanel].getPosition().y - 10);
+    if (key == OF_KEY_DOWN) panels[selPanel].setPosition(panels[selPanel].getPosition().x, panels[selPanel].getPosition().y + 10);
+    
+    if (key == 'g') bDrawGui = !bDrawGui;
+    
+    if (key == '1') selPanel = 0;
+    if (key == '2') selPanel = 1;
 }
 
 //--------------------------------------------------------------
