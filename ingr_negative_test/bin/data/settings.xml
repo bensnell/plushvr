@@ -1,0 +1,12 @@
+<Settings>
+	<Mix>
+		<Draw>1</Draw>
+		<Min>0</Min>
+		<Max>3.30612</Max>
+		<Power>0.367347</Power>
+		<Invert>1</Invert>
+		<Difference>1</Difference>
+		<Easing>0.510204</Easing>
+	</Mix>
+<Settings/>
+</Settings>

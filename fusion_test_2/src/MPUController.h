@@ -53,7 +53,9 @@ public:
     float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};            // vector to hold quaternion
     
     // final values
-    float pitch, yaw, roll;
+    float pitch = 0;
+    float yaw = 0;
+    float roll = 0;
     
     float getPitch() { return pitch; };
     float getYaw() { return yaw; };

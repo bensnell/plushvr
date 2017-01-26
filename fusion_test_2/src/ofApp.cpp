@@ -57,6 +57,7 @@ void ofApp::setup(){
     renderingParams.add(bDrawNone.set("Draw None", false));
     renderingParams.add(bDrawGui.set("Draw Gui", false));
     renderingParams.add(bDrawFPS.set("Draw FPS", true));
+    renderingParams.add(bDrawMPU.set("Draw MPU", false));
     renderingParams.add(bDrawVideo.set("Draw Video", true));
     renderingParams.add(bDrawArrow.set("Draw Arrow", true));
     renderingParams.add(bDrawCV.set("Draw CV", false));
@@ -116,7 +117,7 @@ void ofApp::setup(){
     // set the shape of the window
     ofSetWindowShape(windowW, windowH);
     
-    // update the number of values stored               -- UDPDATE FOR NEW INGR
+    // update the number of values stored
     dir.setNumValues(nIngrValues);
     var.setNumValues(nIngrValues);
     act.setNumValues(nIngrValues);
@@ -198,12 +199,42 @@ void ofApp::update(){
         player.update();
     }
     
-    // update the imu
 #ifdef __arm__
+    // update the imu accelerometer and gyroscope
     mpu.update();
-    if (bOutputMPU) cout << mpu.getStringValues() << endl;
-#endif
     
+    // print if requested
+    if (bOutputMPU) cout << mpu.getStringValues() << endl;
+    
+    // update the ingredients at the rate the app runs -- run separate thread?
+    mpuX.addRaw(mpu.getRoll());
+    mpuY.addRaw(mpu.getPitch());
+    
+    // calculate the difference between this and the previous value
+    mpuX.difference(); // does abs value for now
+    mpuY.difference();
+    
+    // normalize to [0, 1]
+    mpuX.normalize();
+    mpuY.normalize();
+    
+    // store this unsensitized value
+    mpuX.taste();
+    mpuY.taste();
+    
+    // make more movement let less linear motion through
+    mpuX.invert();
+    mpuY.invert();
+    
+    // sensitize or desensitize to noise
+    mpuX.sensitize();
+    mpuY.sensitize();
+    
+    // done manipulating this data
+    mpuX.doneCooking();
+    mpuY.doneCooking();
+#endif
+
     // update settings
     if (bRefreshFlowValues) refreshFlowParams();
     updateDrawingSettings();
@@ -238,6 +269,10 @@ void ofApp::update(){
             
             // Average the directions
             calcAverageDirections();
+            
+            // Remove tilt that is not due to linear motion
+            removeTiltEffects();
+            
         }
         
         // Draw to the terminal
@@ -270,10 +305,16 @@ void ofApp::draw(){
         stringstream ss;
         ss << "Video FPS: " << ofToString(videoFPS.getFPS()) << "\t";
         ss << "App FPS: " << ofToString(ofGetFrameRate());
-        ofDrawBitmapStringHighlight(ss.str(), 0, 20);
+        ofDrawBitmapStringHighlight(ss.str(), 0, py+20);
         
         py += 25;
     }
+#ifdef __arm__
+    if (bDrawMPU) {
+        ofDrawBitmapStringHighlight(mpu.getStringValues(), 0, py+20);
+        py += 25;
+    }
+#endif
     if (bDrawVideo) {
         
         // draw video
@@ -670,7 +711,22 @@ void ofApp::calcAverageDirections() {
     mix.average();
     
     mix.doneCooking();
+}
+
+//--------------------------------------------------------------
+void ofApp::removeTiltEffects() {
+//#ifdef __arm__         // only remove effects if we're on the raspberry pi
+
     
+    // Find the movement in the X direction due to
+    
+    
+    
+    
+    
+    
+    
+//#endif
 }
 
 //--------------------------------------------------------------

@@ -100,6 +100,7 @@ class ofApp : public ofBaseApp{
     MPUController mpu;
 #endif
     
+    void removeTiltEffects();
     
     // ------------------------
     // ------ INGREDIENTS -----
@@ -179,6 +180,7 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> bDrawNone;            // must be false to draw anything
     ofParameter<bool> bDrawGui;
     ofParameter<bool> bDrawFPS;
+    ofParameter<bool> bDrawMPU;
     ofParameter<bool> bDrawVideo;
     ofParameter<bool> bDrawArrow;
     ofParameter<bool> bDrawCV;
