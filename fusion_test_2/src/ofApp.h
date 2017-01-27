@@ -9,6 +9,7 @@
 #ifdef __arm__
     #include "RPiVideoGrabber.h"
     #include "ofxGPIO.h"
+    #include "MPUController.h"
 #endif
 
 #ifndef max
