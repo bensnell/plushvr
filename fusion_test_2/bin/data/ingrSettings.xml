@@ -72,4 +72,40 @@
 		<Easing>0.75</Easing>
 	</Mix_Y>
 <Ingr_Settings/>
+<Direction_2>
+		<Draw>1</Draw>
+		<Min>0</Min>
+		<Max>360</Max>
+		<Power>1</Power>
+		<Invert>0</Invert>
+		<Difference>0</Difference>
+		<Easing>0.75</Easing>
+	</Direction_2>
+	<Mix_2>
+		<Draw>1</Draw>
+		<Min>0</Min>
+		<Max>1</Max>
+		<Power>1</Power>
+		<Invert>0</Invert>
+		<Difference>0</Difference>
+		<Easing>0.75</Easing>
+	</Mix_2>
+	<Angular_Extremes>
+		<Draw>1</Draw>
+		<Min>0</Min>
+		<Max>90</Max>
+		<Power>1</Power>
+		<Invert>0</Invert>
+		<Difference>0</Difference>
+		<Easing>0.75</Easing>
+	</Angular_Extremes>
+	<Mix_3>
+		<Draw>1</Draw>
+		<Min>0</Min>
+		<Max>1</Max>
+		<Power>1</Power>
+		<Invert>0</Invert>
+		<Difference>0</Difference>
+		<Easing>0.75</Easing>
+	</Mix_3>
 </Ingr_Settings>

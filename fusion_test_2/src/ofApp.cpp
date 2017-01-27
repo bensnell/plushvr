@@ -45,6 +45,10 @@ void ofApp::setup(){
     ingrParams.add(nIngrValues.set("Num Values", 300));
     ingrParams.add(bStoreIngrHistory.set("Store History", true));
     
+    imuParams.setName("IMU Params");
+    imuParams.add(bFlipX.set("Flip X Roll", false));
+    imuParams.add(bFlipY.set("Flip Y Pitch", false));
+    
     renderingParams.setName("Rendering Params");
     renderingParams.add(windowW.set("Window Width", 1024, 1, 2000));
     renderingParams.add(windowH.set("Window Height", 768, 1, 2000));
@@ -76,10 +80,12 @@ void ofApp::setup(){
     var.setup("Variance", 300, 0, 3000);
     act.setup("Activity", 300, 0, 5);
     mix.setup("Mix", 300, 0, 1);
-    mpuX.setup("MPU X", 300, 0, 15);
-    mpuY.setup("MPU Y", 300, 0, 15);
-    mixX.setup("Mix X", 300, 0, 1);
-    mixY.setup("Mix Y", 300, 0, 1);
+    mpuX.setup("MPU X", 300, 0, 15, true); // true for two-sided distribution [-1, 1]
+    mpuY.setup("MPU Y", 300, 0, 15, true);
+    dir2.setup("Direction 2", 300, 0, 360);
+    mix2.setup("Mix 2", 300, 0, 1);
+    ext.setup("Angular Extremes", 300, 0, 90);
+    mix3.setup("Mix 3", 300, 0, 1);
     
     // setup panels
     
@@ -105,8 +111,10 @@ void ofApp::setup(){
     panels[1].add(mix.params);
     panels[1].add(mpuX.params);
     panels[1].add(mpuY.params);
-    panels[1].add(mixX.params);
-    panels[1].add(mixY.params);
+    panels[1].add(dir2.params);
+    panels[1].add(mix2.params);
+    panels[1].add(ext.params);
+    panels[1].add(mix3.params);
     panels[1].loadFromFile(ingrPanelFilename);
     
     // update settings from those loaded
@@ -124,8 +132,10 @@ void ofApp::setup(){
     mix.setNumValues(nIngrValues);
     mpuX.setNumValues(nIngrValues);
     mpuY.setNumValues(nIngrValues);
-    mixX.setNumValues(nIngrValues);
-    mixY.setNumValues(nIngrValues);
+    dir2.setNumValues(nIngrValues);
+    mix2.setNumValues(nIngrValues);
+    ext.setNumValues(nIngrValues);
+    mix3.setNumValues(nIngrValues);
     
     dir.bStoreHistory = bStoreIngrHistory;
     var.bStoreHistory = bStoreIngrHistory;
@@ -133,8 +143,10 @@ void ofApp::setup(){
     mix.bStoreHistory = bStoreIngrHistory;
     mpuX.bStoreHistory = bStoreIngrHistory;
     mpuY.bStoreHistory = bStoreIngrHistory;
-    mixX.bStoreHistory = bStoreIngrHistory;
-    mixY.bStoreHistory = bStoreIngrHistory;
+    dir2.bStoreHistory = bStoreIngrHistory;
+    mix2.bStoreHistory = bStoreIngrHistory;
+    ext.bStoreHistory = bStoreIngrHistory;
+    mix3.bStoreHistory = bStoreIngrHistory;
     
     
     // -------------- SETUP VIDEO ----------------
@@ -199,41 +211,8 @@ void ofApp::update(){
         player.update();
     }
     
-#ifdef __arm__
-    // update the imu accelerometer and gyroscope
-    mpu.update();
-    
-    // print if requested
-    if (bOutputMPU) cout << mpu.getStringValues() << endl;
-    
-    // update the ingredients at the rate the app runs -- run separate thread?
-    mpuX.addRaw(mpu.getRoll());
-    mpuY.addRaw(mpu.getPitch());
-    
-    // calculate the difference between this and the previous value
-    mpuX.difference(); // does abs value for now
-    mpuY.difference();
-    
-    // normalize to [0, 1]
-    mpuX.normalize();
-    mpuY.normalize();
-    
-    // store this unsensitized value
-    mpuX.taste();
-    mpuY.taste();
-    
-    // make more movement let less linear motion through
-    mpuX.invert();
-    mpuY.invert();
-    
-    // sensitize or desensitize to noise
-    mpuX.sensitize();
-    mpuY.sensitize();
-    
-    // done manipulating this data
-    mpuX.doneCooking();
-    mpuY.doneCooking();
-#endif
+    // update the mpu and mix its ingredient
+    updateMPU();
 
     // update settings
     if (bRefreshFlowValues) refreshFlowParams();
@@ -436,21 +415,39 @@ void ofApp::draw(){
         py += ingrH;
         width = max(width, (int)ingrW);
     }
-    if (mixX.bDraw) {
+    if (dir2.bDraw) {
         if (py + ingrH > ofGetHeight()) {
             px = width;
             py = 0;
         }
-        mixX.draw(px, py, ingrW, ingrH, {}, false);
+        dir2.draw(px, py, ingrW, ingrH, {}, false);
         py += ingrH;
         width = max(width, (int)ingrW);
     }
-    if (mixY.bDraw) {
+    if (mix2.bDraw) {
         if (py + ingrH > ofGetHeight()) {
             px = width;
             py = 0;
         }
-        mixY.draw(px, py, ingrW, ingrH, {}, false);
+        mix2.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (ext.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        ext.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (mix3.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        mix3.draw(px, py, ingrW, ingrH, {}, false);
         py += ingrH;
         width = max(width, (int)ingrW);
     }
@@ -479,8 +476,10 @@ void ofApp::updateDrawingSettings() {
         mix.bDraw = false;
         mpuX.bDraw = false;
         mpuY.bDraw = false;
-        mixX.bDraw = false;
-        mixY.bDraw = false;
+        dir2.bDraw = false;
+        mix2.bDraw = false;
+        ext.bDraw = false;
+        mix3.bDraw = false;
         
     } else if (bDrawAll) {
         bDrawAll = false;
@@ -499,8 +498,10 @@ void ofApp::updateDrawingSettings() {
         mix.bDraw = true;
         mpuX.bDraw = true;
         mpuY.bDraw = true;
-        mixX.bDraw = true;
-        mixY.bDraw = true;
+        dir2.bDraw = true;
+        mix2.bDraw = true;
+        ext.bDraw = true;
+        mix3.bDraw = true;
     }
 }
 
@@ -508,6 +509,51 @@ void ofApp::updateDrawingSettings() {
 void ofApp::exit() {
     panels[0].saveToFile(genPanelFilename);
     panels[1].saveToFile(ingrPanelFilename);
+}
+
+//--------------------------------------------------------------
+void ofApp::updateMPU() {
+    
+#ifdef __arm__
+    // update the imu accelerometer and gyroscope
+    mpu.update();
+    
+    // print if requested
+    if (bOutputMPU) cout << mpu.getStringValues() << endl;
+    
+    // update the ingredients at the rate the app runs -- run separate thread?
+    mpuX.addRaw(mpu.getRoll());
+    mpuY.addRaw(mpu.getPitch());
+    
+    // calculate the difference between this and the previous value
+    mpuX.difference(); // does abs value for now
+    mpuY.difference();
+    
+    // normalize to [0, 1]
+    mpuX.normalize();
+    mpuY.normalize();
+    
+    // store this unsensitized value
+    mpuX.taste();
+    mpuY.taste();
+    
+    // make more movement let less linear motion through
+    mpuX.invert();
+    mpuY.invert();
+    
+    // sensitize or desensitize to noise
+    mpuX.sensitize();
+    mpuY.sensitize();
+    
+    // smooth the data
+    mpuX.average();
+    mpuY.average();
+    
+    // done manipulating this data
+    mpuX.doneCooking();
+    mpuY.doneCooking();
+#endif
+    
 }
 
 //--------------------------------------------------------------
@@ -715,18 +761,65 @@ void ofApp::calcAverageDirections() {
 
 //--------------------------------------------------------------
 void ofApp::removeTiltEffects() {
-//#ifdef __arm__         // only remove effects if we're on the raspberry pi
+#ifdef __arm__         // only remove effects if we're on the raspberry pi
 
     
-    // Find the movement in the X direction due to
+    // Find the movement in the X and Y directions from the camera data
+    float camAngle = dir.getCook() * 2. * 3.141592654;
+    ofVec2f camVector = ofVec2f(cos(camAngle) * mix.getCook(),
+                                sin(camAngle) * mix.getCook());
     
+    // Find the movement in the X and Y directions from the tilt
+    // may need to flip the vector
+    ofVec2f imuVector = ofVec2f(bFlipX ? mpuX.getCook() : -mpuX.getCook(),
+                                bFlipY ? mpuY.getCook() : -mpuY.getCook());
     
+    // combine the x values
+    // attenuate if vectors are pointing in the same direction
+    ofVec2f resVector; // result
+    if (camVector.x > 0 && imuVector.x > 0) {
+        resVector.x = camVector.x * imuVector.x;
+    } else if (camVector.x < 0 && imuVector.x < 0) {
+        resVector.x = - camVector.x * imuVector.x;
+    } else {        // don't apply gain if tilt is supporting cam prediction
+        resVector.x = camVector.x;
+    }
     
+    // combine the y values
+    if (camVector.y > 0 && imuVector.y > 0) {
+        resVector.y = camVector.y * imuVector.y;
+    } else if (camVector.y < 0 && imuVector.y < 0) {
+        resVector.y = - camVector.y * imuVector.y;
+    } else {
+        resVector.y = camVector.y;
+    }
     
+    // extract the direction and magnitude
+    dir2.addRaw(fmod(atan2(resVector.y, resVector.x)+360., 360.));
+    dir2.normalize();
+    dir2.sensitize();
+    dir2.doneCooking();
     
+    mix2.addRaw(resVector.length());
+    mix2.normalize();
+    mix2.sensitize();
+    mix2.doneCooking();
     
+    // find the most extreme tilt
+    ext.addRaw(max(abs(mpu.getRoll()), abs(mpu.getPitch())));
+    ext.normalize();
+    ext.invert();
+    ext.sensitize();
+    ext.average();
+    ext.doneCooking();
     
-//#endif
+    // mix the extremities with the magnitude of the motion
+    mix3.addRaw(ext.getCook() * mix2.getCook());
+    mix3.normalize();
+    mix3.sensitize();
+    mix3.doneCooking();
+    
+#endif
 }
 
 //--------------------------------------------------------------
@@ -813,25 +906,54 @@ void ofApp::drawPredictedMovement(int x, int y, int size) {
     
     // uses average direction and confidence to predict heading and amount
     float scale = mix.getCook();
-    
     float strokeWeight = scale * size / 10.;
     float length = scale * size;
     
     ofPushMatrix(); ofPopStyle();
-    ofSetLineWidth(strokeWeight);
-    ofSetColor(255);
-    
     ofTranslate(x, y);
     
+    // draw the first prediction before the mpu
+    ofPushMatrix();
     ofRotate(dir.getCook()*360+180);
-    
+    ofSetLineWidth(strokeWeight);
+    ofSetColor(255, 0, 0, 100);
     ofDrawLine(0, 0, length, 0);
     ofDrawLine(length, 0, length/2, -length/3);
     ofDrawLine(length, 0, length/2, length/3);
+    ofPopMatrix();
+    
+    scale = mix2.getCook();
+    strokeWeight = scale * size / 10.;
+    length = scale * size;
+    
+    // draw the second prediction after the mpu
+    ofPushMatrix();
+    ofRotate(dir2.getCook()*360+180);
+    ofSetLineWidth(strokeWeight);
+    ofSetColor(0, 255, 0, 100);
+    ofDrawLine(0, 0, length, 0);
+    ofDrawLine(length, 0, length/2, -length/3);
+    ofDrawLine(length, 0, length/2, length/3);
+    ofPopMatrix();
+
+    scale = mix3.getCook();
+    strokeWeight = scale * size / 10.;
+    length = scale * size;
+    
+    // draw the third prediction after the mpu
+    ofPushMatrix();
+    ofRotate(dir2.getCook()*360+180);
+    ofSetLineWidth(strokeWeight);
+    ofSetColor(0, 0, 255, 100);
+    ofDrawLine(0, 0, length, 0);
+    ofDrawLine(length, 0, length/2, -length/3);
+    ofDrawLine(length, 0, length/2, length/3);
+    ofPopMatrix();
     
     ofPopMatrix(); ofPopStyle();
     
     ofSetLineWidth(1);
+    ofSetColor(255);
 }
 
 //--------------------------------------------------------------

@@ -33,8 +33,6 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     bInvert.addListener(this, &Ingr::updateBool);
     bDifference.addListener(this, &Ingr::updateBool);
     easingParam.addListener(this, &Ingr::updateFloat);
-    
-    cout << "finished setting up params" << endl;
 }
 
 // -----------------------------------------------------------
@@ -373,8 +371,8 @@ void Ingr::draw(int x, int y, int w, int h, vector<int> indices, bool bMargin, i
     if (bTwoSided) ofScale(1, 0.5);
     ofSetColor(255);
     ofSetLineWidth(1);
-    ofDrawLine(0, 0, 0, h);
-    ofDrawBitmapString(name, 2, 10);
+    ofDrawLine(0, 0, 0, bTwoSided ? (2 * h) : h);
+    ofDrawBitmapString(name, 2, bTwoSided ? 20 : 10);
     if (bMargin) {
         ofDrawLine(0, h*0.75, w, h*0.75);
         ofSetColor(255, 100);

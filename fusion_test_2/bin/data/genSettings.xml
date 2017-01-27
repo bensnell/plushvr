@@ -48,6 +48,7 @@
 		<Draw_Flow>1</Draw_Flow>
 		<Draw_Histogram>1</Draw_Histogram>
 	<Draw_CV>0</Draw_CV>
+	<Draw_MPU>0</Draw_MPU>
 	</Rendering_Params>
 	<Output_Params>
 		<Output_Ascii_Video>0</Output_Ascii_Video>

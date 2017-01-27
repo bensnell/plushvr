@@ -100,6 +100,8 @@ class ofApp : public ofBaseApp{
     MPUController mpu;
 #endif
     
+    void updateMPU();
+    
     void removeTiltEffects();
     
     // ------------------------
@@ -112,9 +114,10 @@ class ofApp : public ofBaseApp{
     Ingr mix;
     Ingr mpuX;  // pitch -- Y change
     Ingr mpuY;  // roll -- X change
-    Ingr mixX;
-    Ingr mixY;
-    
+    Ingr dir2;
+    Ingr mix2;
+    Ingr ext; // extremeties of angles
+    Ingr mix3;
     
     void drawPredictedMovement(int x, int y, int size);
     
@@ -165,8 +168,9 @@ class ofApp : public ofBaseApp{
     ofParameter<int> nIngrValues;
     ofParameter<bool> bStoreIngrHistory;
     
-    ofParameterGroup mpuParams;
-    
+    ofParameterGroup imuParams;
+    ofParameter<bool> bFlipX;
+    ofParameter<bool> bFlipY;
     
     ofParameterGroup renderingParams;
     ofParameter<int> windowW;
