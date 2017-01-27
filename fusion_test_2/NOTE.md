@@ -1,0 +1,1 @@
+This app includes both the camera and the imu, accounting for tilt and extreme angles. However, it doesn't replace the variance inverse with changes in yaw, which would be more efficient, and it doesn't use circular means for the initial direction calculations, which would be better.

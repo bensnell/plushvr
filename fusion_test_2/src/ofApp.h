@@ -6,9 +6,8 @@
 #include "ofxGui.h"
 #include "Ingr.h"
 #include "Fps.h"
-#ifdef __arm__
+#ifdef __arm__ // can't include ofxGPIO here again
     #include "RPiVideoGrabber.h"
-    #include "ofxGPIO.h"
     #include "MPUController.h"
 #endif
 
