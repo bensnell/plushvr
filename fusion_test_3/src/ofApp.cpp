@@ -602,6 +602,7 @@ void ofApp::efficientCalc() {
     reliability.addRaw(max(abs(mpu.getRoll()), abs(mpu.getPitch())));
     reliability.normalize();
     reliability.taste();
+    reliability.invert();
     reliability.sensitize();
     reliability.average();
     reliability.doneCooking();

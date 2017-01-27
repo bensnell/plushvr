@@ -134,8 +134,6 @@ void Ingr::sensitize() {
 // -----------------------------------------------------------
 float Ingr::sensitizeCalc(float _value, float _power) {
     
-//    return pow(_value, _power);
-    
     return (_value < 0) ? -pow(-_value, _power) : pow(_value, _power);
 }
 
