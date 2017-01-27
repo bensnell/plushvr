@@ -49,8 +49,6 @@ void ofApp::setup(){
     renderingParams.setName("Rendering Params");
     renderingParams.add(windowW.set("Window Width", 1024, 1, 2000));
     renderingParams.add(windowH.set("Window Height", 768, 1, 2000));
-    renderingParams.add(bNormalizeHistogram.set("Norm Hist", true));
-    renderingParams.add(histogramScale.set("Norm Hist Scale", 45, 0.1, 100));
     renderingParams.add(ingrW.set("Ingr Width", 500, 1, 1000));
     renderingParams.add(ingrH.set("Ingr Height", 150, 1, 500));
     renderingParams.add(videoScale.set("Video Scale", 2, 0.1, 5));

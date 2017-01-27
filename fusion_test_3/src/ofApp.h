@@ -154,8 +154,6 @@ class ofApp : public ofBaseApp{
     ofParameterGroup renderingParams;
     ofParameter<int> windowW;
     ofParameter<int> windowH;
-    ofParameter<bool> bNormalizeHistogram;  // for visualization
-    ofParameter<float> histogramScale;      // for a normalized histogram
     ofParameter<int> ingrW;
     ofParameter<int> ingrH;
     ofParameter<float> videoScale;
