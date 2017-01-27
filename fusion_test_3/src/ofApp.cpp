@@ -570,8 +570,9 @@ void ofApp::efficientCalc() {
             nSamples++;
         }
     }
-    float avgXComp = sumXComp / float(nSamples);
-    float avgYComp = sumYComp / float(nSamples);
+    ofVec2f avgComp = ofVec2f(sumXComp / float(nSamples),
+                              sumYComp / float(nSamples));
+    avgComp.normalize();
     
     // In the following ingredients, averaging is included everywhere but may not need to be done
     
@@ -626,13 +627,13 @@ void ofApp::efficientCalc() {
     
     // Store the x and y components of direction in ingredients
     // These components are between [-1, 1]
-    xComponent.addRaw(avgXComp);
+    xComponent.addRaw(avgComp.x);
     xComponent.normalize(); // superfluous
     xComponent.taste();
     xComponent.average();
     xComponent.doneCooking();
     
-    yComponent.addRaw(avgYComp);
+    yComponent.addRaw(avgComp.y);
     yComponent.normalize(); // superfluous
     yComponent.taste();
     yComponent.average();
