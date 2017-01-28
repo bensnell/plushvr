@@ -54,6 +54,8 @@ class ofApp : public ofBaseApp{
     
     ofxCv::FlowFarneback flow;
     
+    bool bPreviousFrame = false; // removes nan and inf from optical flow
+    
     ofPixels thisFrame;
     
     void updateBodyRadius(int &radius);

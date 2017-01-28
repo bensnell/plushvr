@@ -228,8 +228,12 @@ void ofApp::update(){
                 flow.calcOpticalFlow(thisFrame);
             }
             
-            // Do all the important calculations
-            efficientCalc();
+            if (bPreviousFrame) {
+                // Do all the important calculations
+                efficientCalc();
+            } else {
+                bPreviousFrame = true;
+            }
         }
         
         // Draw to the terminal
@@ -567,22 +571,23 @@ void ofApp::efficientCalc() {
             if (isnan(ox) || isnan(oy) || isinf(ox) || isinf(oy)) continue;
             
             // DEBUG
-            if (ox < -100 || (ox > -0.000001 && ox < 0.0) || (ox > 0.0 && ox < 0.000001) || ox > 100) cout << "\tOX\t" << ox << endl;
-            if (oy < -100 || (oy > -0.000001 && oy < 0.0) || (oy > 0.0 && oy < 0.000001) || oy > 100) cout << "\tOY\t" << oy << endl;
+//            if (ox < -100 || (ox > -0.000001 && ox < 0.0) || (ox > 0.0 && ox < 0.000001) || ox > 100) cout << "\tOX\t" << ox << endl;
+//            if (oy < -100 || (oy > -0.000001 && oy < 0.0) || (oy > 0.0 && oy < 0.000001) || oy > 100) cout << "\tOY\t" << oy << endl;
             
             // find the magnitude and clamp it below the max
             float dist = min(sqrt(ox * ox + oy * oy), (float)maxMagnitude);
             
             // DEBUG
-            if (dist == 0.0 || isinf(dist) || isnan(dist) || dist < -100 || (dist > -0.000001 && dist < 0.0) || (dist > 0.0 && dist < 0.000001)) cout << "\tDIST\t" << dist << endl;
+//            if (dist == 0.0 || isinf(dist) || isnan(dist) || dist < -100 || (dist > -0.000001 && dist < 0.0) || (dist > 0.0 && dist < 0.000001)) cout << "\tDIST\t" << dist << endl;
             
+            // if the distance is weird, skip it
             if (isnan(dist) || isinf(dist)) continue;
             
             // increment the number of samples (will be less than or equal to nPixels)
             nSamples++;
 
             // if there is no distance to this offset, just continue to prevent NaN's
-            if (dist == 0) continue;
+            if (abs(dist) < 0.0000001) continue;
 
             // add this distance to our running sum
             sumDist += dist;
@@ -591,13 +596,14 @@ void ofApp::efficientCalc() {
             sumXComp += ox / dist;
             sumYComp += oy / dist;
             
-            cout << "\tSUM DIST: " << sumDist << "\tSUM X COMP: " << sumXComp << "\tSUM Y COMP: " << sumYComp << endl;
+            // DEBUG
+//            cout << "\tSUM DIST: " << sumDist << "\tSUM X COMP: " << sumXComp << "\tSUM Y COMP: " << sumYComp << endl;
         }
     }
-    cout << "nSamples: " << nSamples;
+//    cout << "nSamples: " << nSamples;
     ofVec2f avgComp = ofVec2f(sumXComp / float(nSamples),
                               sumYComp / float(nSamples));
-    cout << "\tAvg Comps: X: " << avgComp.x << "\t Y: " << avgComp.y << endl;
+//    cout << "\tAvg Comps: X: " << avgComp.x << "\t Y: " << avgComp.y << endl;
 
     avgComp.normalize();
 
@@ -644,7 +650,6 @@ void ofApp::efficientCalc() {
     mixture1.average();
     mixture1.doneCooking();
     
-    
     // If mix1 is small at this point, don't bother doing anything else
     // I.e. Apply a threshold above which movement will be output
     if (bSkipSmallReadings && mixture1.getCook() < outputMovementThreshold) {
@@ -653,19 +658,13 @@ void ofApp::efficientCalc() {
         return;
     }
     
-    
     // Store the x and y components of direction in ingredients
     // These components are between [-1, 1]
     xComponent.addRaw(avgComp.x);
-//    cout << xComponent.cook << "     ";
     xComponent.normalize(); // superfluous
-//    cout << xComponent.cook << "     ";
     xComponent.taste();
-//    cout << xComponent.cook << "     ";
     xComponent.average();
-//    cout << xComponent.cook << "     ";
     xComponent.doneCooking();
-//    cout << xComponent.cook << "     " << xComponent.getCook() << endl << endl;    
 
     yComponent.addRaw(avgComp.y);
     yComponent.normalize(); // superfluous
@@ -675,21 +674,21 @@ void ofApp::efficientCalc() {
     
     // Find the changes in Roll and Pitch that may cause the camera to perceive motion in unintended directions
     xStability.addRaw(mpu.getRoll());
-//    cout << "STABILITY: (orig) " << xStability.cook << "   ";
+    cout << "STABILITY: (orig) " << xStability.cook << "   ";
     xStability.difference();
-//    cout << "     (diff) " << xStability.cook;
+    cout << "     (diff) " << xStability.cook;
     xStability.normalize();
-//    cout << "     (norm) " << xStability.cook; 
+    cout << "     (norm) " << xStability.cook; 
     xStability.taste();
-//    cout << "     (tst) " << xStability.cook;
+    cout << "     (tst) " << xStability.cook;
     xStability.invert(); // does this apply the flip?
-//    cout << "     (inv) " << xStability.cook;
-//    cout << "     (sens) " << xStability.cook;
+    cout << "     (inv) " << xStability.cook;
     xStability.average();
-//    cout << "     (avg) " << xStability.cook;
+    cout << "     (avg) " << xStability.cook;
     xStability.sensitize();
+    cout << "     (sens) " << xStability.cook;
     xStability.doneCooking();
-//    cout << "     (done) " << xStability.getCook() << endl << endl;
+    cout << "     (done) " << xStability.getCook() << endl << endl;
     
     yStability.addRaw(mpu.getPitch());
     yStability.difference();
