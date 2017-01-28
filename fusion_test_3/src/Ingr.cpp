@@ -20,6 +20,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     params.add(bDraw.set("Draw", true));
     params.add(min.set("Min", inLowerBound, inLowerBound, inUpperBound/4));
     params.add(max.set("Max", inUpperBound, inUpperBound/5, inUpperBound));
+    params.add(centerOffset.set("Offset", 0, 0, (inUpperBound-inLowerBound)/2));
     params.add(power.set("Power", 1, 0, 4));
     params.add(bInvert.set("Invert", false));
     params.add(bDifference.set("Difference", false));
@@ -29,6 +30,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     
     min.addListener(this, &Ingr::updateFloat);
     max.addListener(this, &Ingr::updateFloat);
+    centerOffset.addListener(this, &Ingr::updateFloat);
     power.addListener(this, &Ingr::updateFloat);
     bInvert.addListener(this, &Ingr::updateBool);
     bDifference.addListener(this, &Ingr::updateBool);
@@ -100,15 +102,21 @@ void Ingr::normalize() {
     steps.push_back(NORM);
     
     // map the value to [0, 1]
-    cook = normalizeCalc(cook, min, max);
+    cook = normalizeCalc(cook, min, max, centerOffset);
 }
 
 // -----------------------------------------------------------
-float Ingr::normalizeCalc(float _value, float _min, float _max) {
+float Ingr::normalizeCalc(float _value, float _min, float _max, float _centerOffset) {
     
     if (bTwoSided) {
         // [-1, 1]
-        return CLAMP(map(_value, min, max, 0, 1, false), -1, 1);
+        //return CLAMP(map(_value, min, max, 0, 1, false), -1, 1); // NO CENTER BUFFER REGION
+        // account for a center buffer region with nonzero _centerOffset
+        if (_value < _min) {
+            return map(_value, -_max, _min - _centerOffset, -1, 0, true);
+        } else {
+            return map(_value, _min + _centerOffset, _max, 0, 1, true);
+        }
     } else {
         // one-sided data
         // [0, 1]
@@ -150,7 +158,11 @@ void Ingr::invert() {
 // -----------------------------------------------------------
 float Ingr::invertCalc(float _value, bool _bInvert) {
 
-    return _bInvert ? (1-_value) : _value;
+    if (bTwoSided) {
+        return _bInvert ? (-_value) : _value;
+    } else {
+        return _bInvert ? (1-_value) : _value;
+    }
 }
 
 // -----------------------------------------------------------
@@ -290,7 +302,7 @@ void Ingr::refresh() {
             switch(steps[j]) {
                     
                 case NORM:
-                    tmpCook = normalizeCalc(tmpCook, min, max);
+                    tmpCook = normalizeCalc(tmpCook, min, max, centerOffset);
                     break;
                 case SENS:
                     tmpCook = sensitizeCalc(tmpCook, power);
@@ -368,11 +380,11 @@ void Ingr::draw(int x, int y, int w, int h, vector<int> indices, bool bMargin, i
     
     ofPushMatrix(); ofPushStyle();
     ofTranslate(x, y);
-    if (bTwoSided) ofScale(1, 0.5);
     ofSetColor(255);
     ofSetLineWidth(1);
+    ofDrawBitmapString(name, 2, 10);
+    if (bTwoSided) ofScale(1, 0.5);
     ofDrawLine(0, 0, 0, bTwoSided ? (2 * h) : h);
-    ofDrawBitmapString(name, 2, bTwoSided ? 20 : 10);
     if (bMargin) {
         ofDrawLine(0, h*0.75, w, h*0.75);
         ofSetColor(255, 100);

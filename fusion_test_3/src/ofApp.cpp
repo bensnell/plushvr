@@ -41,7 +41,8 @@ void ofApp::setup(){
     ingrParams.add(nIngrValues.set("Num Values", 300));
     ingrParams.add(bStoreIngrHistory.set("Store History", true));
     ingrParams.add(outputMovementThreshold.set("Output Threshold", 0.1, 0, 1));
-    
+    ingrParams.add(bSkipSmallReadings.set("Skip Small Readings", false));    
+
     imuParams.setName("IMU Params");
 //    imuParams.add(bFlipX.set("Flip X Roll", false));
 //    imuParams.add(bFlipY.set("Flip Y Pitch", false));
@@ -77,8 +78,8 @@ void ofApp::setup(){
     mixture1.setup("Mixture1 - magnitude conf", 200, 0, 1);
     xComponent.setup("X Component - of direction", 200, 0, 1, true); // true for two sided distribution (i.e. [-1, 1])
     yComponent.setup("Y Component - of direction", 200, 0, 1, true);
-    xStability.setup("X Stability - dRoll inverted", 200, 0, 4, true); // maybe hi should be lower
-    yStability.setup("Y Stability - bPitch inverted", 200, 0, 4, true);
+    xStability.setup("X Stability - dRoll inverted", 200, 0, 12, true); // maybe hi should be lower
+    yStability.setup("Y Stability - bPitch inverted", 200, 0, 12, true);
     mixture2.setup("Mixture 2 - x direction", 200, 0, 1, true);
     mixture3.setup("Mixture 3 - y direction", 200, 0, 1, true);
     
@@ -229,6 +230,8 @@ void ofApp::update(){
             
             // Do all the important calculations
             efficientCalc();
+
+            //cout << "Components:     " << xComponent.getCook() << "     " << yComponent.getCook() << endl;
         }
         
         // Draw to the terminal
@@ -555,25 +558,43 @@ void ofApp::efficientCalc() {
             // get the offsets in x and y
             float ox = offsets[index * 2];
             float oy = offsets[index * 2 + 1];
+
+            if (isnan(ox)) continue; // combine into 1
+            if (isnan(oy)) continue;
+            if (isinf(ox)) continue;
+            if (isinf(oy)) continue;
+            if (isinf(-ox)) continue;
+            if (isinf(-oy)) continue;
             
             // find the magnitude and clamp it below the max
             float dist = min(sqrt(ox * ox + oy * oy), (float)maxMagnitude);
-            
+           
+            // increment the number of samples (will be less than or equal to nPixels)
+            nSamples++;
+
+            // if there is no distance to this offset, just continue to prevent NaN's
+            if (dist == 0) continue;
+
             // add this distance to our running sum
             sumDist += dist;
             
             // normalize the offsets and add them to our sums
             sumXComp += ox / dist;
             sumYComp += oy / dist;
-            
-            // increment the number of samples (will be less than or equal to nPixels)
-            nSamples++;
+
+            if (isnan(ox/dist)) cout << "NAN: " << ox << "     " << dist << endl;
+            if (isinf(ox/dist)) cout << "INF: " << ox << "     " << dist << endl;
+            if (isinf(-ox/dist)) cout << "-INF: " << ox << "     " << dist << endl;
         }
     }
+    cout << "Sum: " << sumXComp << "     nSamples: " << nSamples << "     ";
     ofVec2f avgComp = ofVec2f(sumXComp / float(nSamples),
                               sumYComp / float(nSamples));
+    cout << "Comps:  " << avgComp.x;    
+
     avgComp.normalize();
-    
+    cout << "     " << avgComp.x << endl;    
+
     // In the following ingredients, averaging is included everywhere but may not need to be done
     
     // Find the average activity and add it to an ingredient
@@ -602,6 +623,8 @@ void ofApp::efficientCalc() {
     reliability.addRaw(max(abs(mpu.getRoll()), abs(mpu.getPitch())));
     reliability.normalize();
     reliability.taste();
+    reliability.invert();
+    reliability.taste();
     reliability.sensitize();
     reliability.average();
     reliability.doneCooking();
@@ -618,7 +641,7 @@ void ofApp::efficientCalc() {
     
     // If mix1 is small at this point, don't bother doing anything else
     // I.e. Apply a threshold above which movement will be output
-    if (mixture1.getCook() < outputMovementThreshold) {
+    if (bSkipSmallReadings && mixture1.getCook() < outputMovementThreshold) {
         // set the output to be 0
         movementForce.set(0, 0);
         return;
@@ -628,11 +651,16 @@ void ofApp::efficientCalc() {
     // Store the x and y components of direction in ingredients
     // These components are between [-1, 1]
     xComponent.addRaw(avgComp.x);
+    cout << xComponent.cook << "     ";
     xComponent.normalize(); // superfluous
+    cout << xComponent.cook << "     ";
     xComponent.taste();
+    cout << xComponent.cook << "     ";
     xComponent.average();
+    cout << xComponent.cook << "     ";
     xComponent.doneCooking();
-    
+    cout << xComponent.cook << "     " << xComponent.getCook() << endl << endl;    
+
     yComponent.addRaw(avgComp.y);
     yComponent.normalize(); // superfluous
     yComponent.taste();
@@ -641,13 +669,21 @@ void ofApp::efficientCalc() {
     
     // Find the changes in Roll and Pitch that may cause the camera to perceive motion in unintended directions
     xStability.addRaw(mpu.getRoll());
+    cout << "STABILITY: (orig) " << xStability.cook << "   ";
     xStability.difference();
+    cout << "     (diff) " << xStability.cook;
     xStability.normalize();
+    cout << "     (norm) " << xStability.cook; 
     xStability.taste();
+    cout << "     (tst) " << xStability.cook;
     xStability.invert(); // does this apply the flip?
+    cout << "     (inv) " << xStability.cook;
     xStability.sensitize();
+    cout << "     (sens) " << xStability.cook;
     xStability.average();
+    cout << "     (avg) " << xStability.cook;
     xStability.doneCooking();
+    cout << "     (done) " << xStability.getCook() << endl << endl;
     
     yStability.addRaw(mpu.getPitch());
     yStability.difference();

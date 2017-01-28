@@ -2,7 +2,7 @@
 	<General_Params>
 		<Image_Width>128</Image_Width>
 		<Image_Height>72</Image_Height>
-		<Live>0</Live>
+		<Live>1</Live>
 		<Pause_Live>0</Pause_Live>
 		<Video_Name>tracking_test_128x72_30fps.mp4</Video_Name>
 		<Desired_FPS>60</Desired_FPS>
@@ -13,11 +13,11 @@
 	</CV_Params>
 	<Optical_Flow_Params>
 		<Pyramid_Scale>0.5</Pyramid_Scale>
-		<Num_Levels>4</Num_Levels>
-		<Window_Size>10</Window_Size>
-		<Num_Iterations>2</Num_Iterations>
-		<Poly_N>7</Poly_N>
-		<Poly_Sigma>1.5</Poly_Sigma>
+		<Num_Levels>3</Num_Levels>
+		<Window_Size>20</Window_Size>
+		<Num_Iterations>1</Num_Iterations>
+		<Poly_N>5</Poly_N>
+		<Poly_Sigma>1.1</Poly_Sigma>
 		<Use_Gaussian>0</Use_Gaussian>
 		<Refresh_Params>0</Refresh_Params>
 	<Do_Op_Flow>1</Do_Op_Flow>
@@ -28,23 +28,23 @@
 		<Angle_Mask>90</Angle_Mask>
 	</Statistics_Params>
 	<Ingredient_Params>
-		<Num_Values>300</Num_Values>
+		<Num_Values>10</Num_Values>
 		<Store_History>1</Store_History>
 	</Ingredient_Params>
 	<Rendering_Params>
-		<Window_Width>1024</Window_Width>
-		<Window_Height>768</Window_Height>
+		<Window_Width>500</Window_Width>
+		<Window_Height>350</Window_Height>
 		<Norm_Hist>0</Norm_Hist>
 		<Norm_Hist_Scale>30.1719</Norm_Hist_Scale>
 		<Ingr_Width>500</Ingr_Width>
 		<Ingr_Height>150</Ingr_Height>
 		<Video_Scale>2</Video_Scale>
 		<Draw_All>0</Draw_All>
-		<Draw_None>0</Draw_None>
+		<Draw_None>1</Draw_None>
 		<Draw_Gui>1</Draw_Gui>
-		<Draw_FPS>1</Draw_FPS>
-		<Draw_Video>1</Draw_Video>
-		<Draw_Arrow>1</Draw_Arrow>
+		<Draw_FPS>0</Draw_FPS>
+		<Draw_Video>0</Draw_Video>
+		<Draw_Arrow>0</Draw_Arrow>
 		<Draw_Flow>0</Draw_Flow>
 		<Draw_Histogram>0</Draw_Histogram>
 	<Draw_CV>0</Draw_CV>
@@ -53,8 +53,8 @@
 		<Output_Ascii_Video>0</Output_Ascii_Video>
 		<Stride>5</Stride>
 		<Stretch>2</Stretch>
-		<Output_FPS>0</Output_FPS>
-		<Output_Direction>0</Output_Direction>
+		<Output_FPS>1</Output_FPS>
+		<Output_Direction>1</Output_Direction>
 	</Output_Params>
 <General_Settings/>
 </General_Settings>

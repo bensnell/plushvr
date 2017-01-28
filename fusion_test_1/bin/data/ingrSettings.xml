@@ -1,6 +1,6 @@
 <Ingr_Settings>
 	<Direction>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>0</Min>
         <Max>360</Max>
         <Power>1</Power>
@@ -9,7 +9,7 @@
         <Easing>0.857143</Easing>
 	</Direction>
 	<Variance>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>108.418</Min>
         <Max>2330.36</Max>
         <Power>0.44898</Power>
@@ -18,7 +18,7 @@
         <Easing>0.734694</Easing>
 	</Variance>
 	<Activity>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>0.6</Min>
         <Max>2</Max>
         <Power>0.244898</Power>
@@ -27,7 +27,7 @@
         <Easing>0.75</Easing>
 	</Activity>
 	<Mix>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>0.0612245</Min>
         <Max>0.841837</Max>
         <Power>1.26531</Power>
