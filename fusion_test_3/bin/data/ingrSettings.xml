@@ -1,6 +1,6 @@
 <Ingr_Settings>
 	<Activity_-_avg_magntiude>
-		<Draw>0</Draw>
+		<Draw>1</Draw>
 		<Min>0.433674</Min>
 		<Max>5</Max>
 		<Power>1</Power>
@@ -40,24 +40,24 @@
 	<Offset>0</Offset>
 	</Mixture1_-_magnitude_conf>
 	<X_Component_-_of_direction>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.765306</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</X_Component_-_of_direction>
 	<X_Stability_-_dRoll_inverted>
 		<Draw>1</Draw>
 		<Min>0</Min>
 		<Max>12</Max>
-		<Power>0.979592</Power>
+		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>1</Difference>
-		<Easing>0.877551</Easing>
-	<Offset>1.16327</Offset>
+		<Easing>0.87</Easing>
+	<Offset>2.5</Offset>
 	</X_Stability_-_dRoll_inverted>
 	<Mixture_2_-_x_direction>
 		<Draw>0</Draw>
@@ -82,12 +82,12 @@
 	<Y_Stability_-_bPitch_inverted>
 		<Draw>0</Draw>
 		<Min>0</Min>
-		<Max>4</Max>
+		<Max>12</Max>
 		<Power>1</Power>
 		<Invert>0</Invert>
-		<Difference>0</Difference>
-		<Easing>0.75</Easing>
-	<Offset>0</Offset>
+		<Difference>1</Difference>
+		<Easing>0.87</Easing>
+	<Offset>2.5</Offset>
 	</Y_Stability_-_bPitch_inverted>
 	<Mixture_3_-_y_direction>
 		<Draw>0</Draw>
