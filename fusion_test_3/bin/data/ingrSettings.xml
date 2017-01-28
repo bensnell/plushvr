@@ -100,4 +100,24 @@
 	<Offset>0</Offset>
 	</Mixture_3_-_y_direction>
 <Ingr_Settings/>
+<X_Stability_Postprocessing>
+		<Draw>1</Draw>
+		<Min>0</Min>
+		<Max>1</Max>
+		<Offset>0</Offset>
+		<Power>1</Power>
+		<Invert>0</Invert>
+		<Difference>0</Difference>
+		<Easing>0.75</Easing>
+	</X_Stability_Postprocessing>
+	<Y_Stability_Postprocessing>
+		<Draw>1</Draw>
+		<Min>0</Min>
+		<Max>1</Max>
+		<Offset>0</Offset>
+		<Power>1</Power>
+		<Invert>0</Invert>
+		<Difference>0</Difference>
+		<Easing>0.75</Easing>
+	</Y_Stability_Postprocessing>
 </Ingr_Settings>

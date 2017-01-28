@@ -110,6 +110,7 @@ float Ingr::normalizeCalc(float _value, float _min, float _max, float _centerOff
     
     if (bTwoSided) {
         // [-1, 1]
+        //return CLAMP(map(_value, min, max, 0, 1, false), -1, 1); // NO CENTER BUFFER REGION
         // account for a center buffer region with nonzero _centerOffset
         if (_value < _min) {
             return map(_value, -_max, _min - _centerOffset, -1, 0, true);

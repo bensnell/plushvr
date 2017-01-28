@@ -92,6 +92,8 @@ class ofApp : public ofBaseApp{
     Ingr yComponent;
     Ingr xStability;    // prevents left and right tilt -- ROLL
     Ingr yStability;    // prevents front and back tilt -- PITCH
+    Ingr xStabilityPost;// second round of processing on the data
+    Ingr yStabilityPost;
     // combined confidence
     Ingr mixture2;      // x component
     Ingr mixture3;      // y component

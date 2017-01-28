@@ -80,6 +80,8 @@ void ofApp::setup(){
     yComponent.setup("Y Component - of direction", 200, 0, 1, true);
     xStability.setup("X Stability - dRoll inverted", 200, 0, 12, true); // maybe hi should be lower
     yStability.setup("Y Stability - bPitch inverted", 200, 0, 12, true);
+    xStabilityPost.setup("X Stability Postprocessing", 200, 0, 1, true);
+    yStabilityPost.setup("Y Stability Postprocessing", 200, 0, 1, true);
     mixture2.setup("Mixture 2 - x direction", 200, 0, 1, true);
     mixture3.setup("Mixture 3 - y direction", 200, 0, 1, true);
     
@@ -107,9 +109,11 @@ void ofApp::setup(){
     panels[1].add(mixture1.params);
     panels[1].add(xComponent.params);
     panels[1].add(xStability.params);
+    panels[1].add(xStabilityPost.params);
     panels[1].add(mixture2.params);
     panels[1].add(yComponent.params);
     panels[1].add(yStability.params);
+    panels[1].add(yStabilityPost.params);
     panels[1].add(mixture3.params);
     panels[1].loadFromFile(ingrPanelFilename);
     
@@ -130,6 +134,8 @@ void ofApp::setup(){
     yComponent.setNumValues(nIngrValues);
     xStability.setNumValues(nIngrValues);
     yStability.setNumValues(nIngrValues);
+    xStabilityPost.setNumValues(nIngrValues);
+    yStabilityPost.setNumValues(nIngrValues);
     mixture2.setNumValues(nIngrValues);
     mixture3.setNumValues(nIngrValues);
     
@@ -141,6 +147,8 @@ void ofApp::setup(){
     yComponent.bStoreHistory = bStoreIngrHistory;
     xStability.bStoreHistory = bStoreIngrHistory;
     yStability.bStoreHistory = bStoreIngrHistory;
+    xStabilityPost.bStoreHistory = bStoreIngrHistory;
+    yStabilityPost.bStoreHistory = bStoreIngrHistory;
     mixture2.bStoreHistory = bStoreIngrHistory;
     mixture3.bStoreHistory = bStoreIngrHistory;
     
@@ -406,6 +414,24 @@ void ofApp::draw(){
         py += ingrH;
         width = max(width, (int)ingrW);
     }
+    if (xStabilityPost.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        xStabilityPost.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
+    if (yStabilityPost.bDraw) {
+        if (py + ingrH > ofGetHeight()) {
+            px = width;
+            py = 0;
+        }
+        yStabilityPost.draw(px, py, ingrW, ingrH, {}, false);
+        py += ingrH;
+        width = max(width, (int)ingrW);
+    }
     if (mixture2.bDraw) {
         if (py + ingrH > ofGetHeight()) {
             px = width;
@@ -450,6 +476,8 @@ void ofApp::updateDrawingSettings() {
         yComponent.bDraw = false;
         xStability.bDraw = false;
         yStability.bDraw = false;
+        xStabilityPost.bDraw = false;
+        yStabilityPost.bDraw = false;
         mixture2.bDraw = false;
         mixture3.bDraw = false;
         
@@ -471,6 +499,8 @@ void ofApp::updateDrawingSettings() {
         yComponent.bDraw = true;
         xStability.bDraw = true;
         yStability.bDraw = true;
+        xStabilityPost.bDraw = true;
+        yStabilityPost.bDraw = true;
         mixture2.bDraw = true;
         mixture3.bDraw = true;
     }
@@ -560,25 +590,12 @@ void ofApp::efficientCalc() {
             // get the offsets in x and y
             float ox = offsets[index * 2];
             float oy = offsets[index * 2 + 1];
-
-            // DEBUG
-            if (isnan(ox)) cout << "\tOX\t" << ox << endl;
-            if (isinf(ox)) cout << "\tOX\t" << ox << endl;
-            if (isnan(oy)) cout << "\tOY\t" << oy << endl;
-            if (isinf(oy)) cout << "\tOY\t" << oy << endl;
             
             // if any of the optical flow output is strange, skip it
             if (isnan(ox) || isnan(oy) || isinf(ox) || isinf(oy)) continue;
             
-            // DEBUG
-//            if (ox < -100 || (ox > -0.000001 && ox < 0.0) || (ox > 0.0 && ox < 0.000001) || ox > 100) cout << "\tOX\t" << ox << endl;
-//            if (oy < -100 || (oy > -0.000001 && oy < 0.0) || (oy > 0.0 && oy < 0.000001) || oy > 100) cout << "\tOY\t" << oy << endl;
-            
             // find the magnitude and clamp it below the max
             float dist = min(sqrt(ox * ox + oy * oy), (float)maxMagnitude);
-            
-            // DEBUG
-//            if (dist == 0.0 || isinf(dist) || isnan(dist) || dist < -100 || (dist > -0.000001 && dist < 0.0) || (dist > 0.0 && dist < 0.000001)) cout << "\tDIST\t" << dist << endl;
             
             // if the distance is weird, skip it
             if (isnan(dist) || isinf(dist)) continue;
@@ -595,16 +612,10 @@ void ofApp::efficientCalc() {
             // normalize the offsets and add them to our sums
             sumXComp += ox / dist;
             sumYComp += oy / dist;
-            
-            // DEBUG
-//            cout << "\tSUM DIST: " << sumDist << "\tSUM X COMP: " << sumXComp << "\tSUM Y COMP: " << sumYComp << endl;
         }
     }
-//    cout << "nSamples: " << nSamples;
     ofVec2f avgComp = ofVec2f(sumXComp / float(nSamples),
                               sumYComp / float(nSamples));
-//    cout << "\tAvg Comps: X: " << avgComp.x << "\t Y: " << avgComp.y << endl;
-
     avgComp.normalize();
 
     // In the following ingredients, averaging is included everywhere but may not need to be done
@@ -674,21 +685,13 @@ void ofApp::efficientCalc() {
     
     // Find the changes in Roll and Pitch that may cause the camera to perceive motion in unintended directions
     xStability.addRaw(mpu.getRoll());
-    cout << "STABILITY: (orig) " << xStability.cook << "   ";
     xStability.difference();
-    cout << "     (diff) " << xStability.cook;
     xStability.normalize();
-    cout << "     (norm) " << xStability.cook; 
     xStability.taste();
-    cout << "     (tst) " << xStability.cook;
     xStability.invert(); // does this apply the flip?
-    cout << "     (inv) " << xStability.cook;
     xStability.average();
-    cout << "     (avg) " << xStability.cook;
     xStability.sensitize();
-    cout << "     (sens) " << xStability.cook;
     xStability.doneCooking();
-    cout << "     (done) " << xStability.getCook() << endl << endl;
     
     yStability.addRaw(mpu.getPitch());
     yStability.difference();
@@ -699,16 +702,33 @@ void ofApp::efficientCalc() {
     yStability.average();
     yStability.doneCooking();
     
+    // Apply a second round of smoothing
+    xStabilityPost.addRaw(xStability.getCook());
+    xStabilityPost.normalize();
+    xStabilityPost.taste();
+    xStabilityPost.invert();
+    xStabilityPost.sensitize();
+    xStabilityPost.average();
+    xStabilityPost.doneCooking();
+    
+    yStabilityPost.addRaw(yStability.getCook());
+    yStabilityPost.normalize();
+    yStabilityPost.taste();
+    yStabilityPost.invert();
+    yStabilityPost.sensitize();
+    yStabilityPost.average();
+    yStabilityPost.doneCooking();
+    
     // Add components, stabilities, and mixture1 together into two new mixes that represent the near-final movement force
     // Components and stabilities are added in a piecewise manner to account for the nonlinear combinations of directions / tilt
     // mixtures 1 and 2 are two-sided [-1, 1]
     
     // add the x values
     // attenuate if vectors are pointing in the same direction
-    if (xComponent.getCook() > 0 && xStability.getCook() > 0) {
-        mixture2.addRaw(xComponent.getCook() * xStability.getCook() * mixture1.getCook());
-    } else if (xComponent.getCook() < 0 && xStability.getCook() < 0) {
-        mixture2.addRaw(- xComponent.getCook() * xStability.getCook() * mixture1.getCook());
+    if (xComponent.getCook() > 0 && xStabilityPost.getCook() > 0) {
+        mixture2.addRaw(xComponent.getCook() * xStabilityPost.getCook() * mixture1.getCook());
+    } else if (xComponent.getCook() < 0 && xStabilityPost.getCook() < 0) {
+        mixture2.addRaw(- xComponent.getCook() * xStabilityPost.getCook() * mixture1.getCook());
     } else {        // don't apply gain if tilt is supporting cam prediction
         mixture2.addRaw(xComponent.getCook() * mixture1.getCook());
     }
@@ -719,10 +739,10 @@ void ofApp::efficientCalc() {
     mixture2.doneCooking();
     
     // combine the y values
-    if (yComponent.getCook() > 0 && yStability.getCook() > 0) {
-        mixture3.addRaw(yComponent.getCook() * yStability.getCook() * mixture1.getCook());
-    } else if (yComponent.getCook() < 0 && yStability.getCook() < 0) {
-        mixture3.addRaw(- yComponent.getCook() * yStability.getCook() * mixture1.getCook());
+    if (yComponent.getCook() > 0 && yStabilityPost.getCook() > 0) {
+        mixture3.addRaw(yComponent.getCook() * yStabilityPost.getCook() * mixture1.getCook());
+    } else if (yComponent.getCook() < 0 && yStabilityPost.getCook() < 0) {
+        mixture3.addRaw(- yComponent.getCook() * yStabilityPost.getCook() * mixture1.getCook());
     } else {
         mixture3.addRaw(yComponent.getCook() * mixture1.getCook());
     }
