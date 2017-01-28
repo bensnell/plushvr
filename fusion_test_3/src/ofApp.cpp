@@ -780,7 +780,7 @@ void ofApp::drawPredictedMovement(int x, int y, int size) {
     
     ofPushMatrix(); ofPopStyle();
     ofTranslate(x, y);
-    ofRotate(ofRadToDeg(atan2(movementForce.y, movementForce.x)));
+    ofRotate(ofRadToDeg(atan2(movementForce.y, movementForce.x))+180);
     ofSetLineWidth(strokeWeight);
     ofSetColor(255);
     ofDrawLine(0, 0, length, 0);
