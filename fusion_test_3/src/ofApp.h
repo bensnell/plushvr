@@ -146,7 +146,8 @@ class ofApp : public ofBaseApp{
     ofParameter<int> nIngrValues;
     ofParameter<bool> bStoreIngrHistory;
     ofParameter<float> outputMovementThreshold; // threshold when movements begin to be output (for example, when movement [0,1] is above 0.1)
-    
+    ofParameter<bool> bSkipSmallReadings;   
+ 
     ofParameterGroup imuParams;
 //    ofParameter<bool> bFlipX;
 //    ofParameter<bool> bFlipY;

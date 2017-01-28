@@ -48,9 +48,10 @@ public:
     
     // norm must always be first
     void normalize();
-    float normalizeCalc(float _value, float _min, float _max);
+    float normalizeCalc(float _value, float _min, float _max, float _centerOffset);
     ofParameter<float> min;
     ofParameter<float> max;
+    ofParameter<float> centerOffset; // buffer around min for two-sided distributions: should be positive and less than (max-min)
     // ^ SHOULD SEPARATE INTO NORM THEN CLAMP
     
     void sensitize();

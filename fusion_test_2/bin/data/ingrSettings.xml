@@ -1,6 +1,6 @@
 <Ingr_Settings>
 	<Direction>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>0</Min>
         <Max>360</Max>
         <Power>1</Power>
@@ -9,7 +9,7 @@
         <Easing>0.857143</Easing>
 	</Direction>
 	<Variance>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>108.418</Min>
         <Max>2330.36</Max>
         <Power>0.44898</Power>
@@ -18,7 +18,7 @@
         <Easing>0.734694</Easing>
 	</Variance>
 	<Activity>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>0.6</Min>
         <Max>2</Max>
         <Power>0.244898</Power>
@@ -27,7 +27,7 @@
         <Easing>0.75</Easing>
 	</Activity>
 	<Mix>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
         <Min>0.0612245</Min>
         <Max>0.841837</Max>
         <Power>1.26531</Power>
@@ -36,7 +36,7 @@
         <Easing>0.785714</Easing>
 	</Mix>
 	<MPU_X>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>15</Max>
 		<Power>1</Power>
@@ -45,7 +45,7 @@
 		<Easing>0.75</Easing>
 	</MPU_X>
 	<MPU_Y>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>15</Max>
 		<Power>1</Power>
@@ -73,7 +73,7 @@
 	</Mix_Y>
 <Ingr_Settings/>
 <Direction_2>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>360</Max>
 		<Power>1</Power>
@@ -82,7 +82,7 @@
 		<Easing>0.75</Easing>
 	</Direction_2>
 	<Mix_2>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
@@ -91,7 +91,7 @@
 		<Easing>0.75</Easing>
 	</Mix_2>
 	<Angular_Extremes>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>90</Max>
 		<Power>1</Power>
@@ -100,7 +100,7 @@
 		<Easing>0.75</Easing>
 	</Angular_Extremes>
 	<Mix_3>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
