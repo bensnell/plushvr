@@ -34,17 +34,17 @@
 	<Skip_Small_Readings>0</Skip_Small_Readings>
 	</Ingredient_Params>
 	<Rendering_Params>
-		<Window_Width>500</Window_Width>
-		<Window_Height>350</Window_Height>
+		<Window_Width>1000</Window_Width>
+		<Window_Height>800</Window_Height>
 		<Norm_Hist>0</Norm_Hist>
 		<Norm_Hist_Scale>45</Norm_Hist_Scale>
-		<Ingr_Width>500</Ingr_Width>
-		<Ingr_Height>150</Ingr_Height>
+		<Ingr_Width>800</Ingr_Width>
+		<Ingr_Height>175</Ingr_Height>
 		<Video_Scale>2</Video_Scale>
 		<Draw_All>0</Draw_All>
 		<Draw_None>0</Draw_None>
 		<Draw_Gui>0</Draw_Gui>
-		<Draw_FPS>0</Draw_FPS>
+		<Draw_FPS>1</Draw_FPS>
 		<Draw_MPU>0</Draw_MPU>
 		<Draw_Video>0</Draw_Video>
 		<Draw_Arrow>0</Draw_Arrow>
