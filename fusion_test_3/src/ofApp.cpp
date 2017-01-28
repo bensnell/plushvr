@@ -782,7 +782,7 @@ void ofApp::drawPredictedMovement(int x, int y, int size) {
     ofTranslate(x, y);
     ofRotate(ofRadToDeg(atan2(movementForce.y, movementForce.x)));
     ofSetLineWidth(strokeWeight);
-    ofSetColor(255, 0, 0, 100);
+    ofSetColor(255);
     ofDrawLine(0, 0, length, 0);
     ofDrawLine(length, 0, length/2, -length/3);
     ofDrawLine(length, 0, length/2, length/3);
