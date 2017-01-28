@@ -740,9 +740,9 @@ void ofApp::efficientCalc() {
     
     // combine the y values
     if (yComponent.getCook() > 0 && yStabilityPost.getCook() > 0) {
-        mixture3.addRaw(yComponent.getCook() * yStabilityPost.getCook() * mixture1.getCook());
+        mixture3.addRaw(yComponent.getCook() * (1-yStabilityPost.getCook()) * mixture1.getCook());
     } else if (yComponent.getCook() < 0 && yStabilityPost.getCook() < 0) {
-        mixture3.addRaw(- yComponent.getCook() * yStabilityPost.getCook() * mixture1.getCook());
+        mixture3.addRaw(yComponent.getCook() * (1+yStabilityPost.getCook()) * mixture1.getCook());
     } else {
         mixture3.addRaw(yComponent.getCook() * mixture1.getCook());
     }
