@@ -60,7 +60,7 @@
 	<Offset>2.5</Offset>
 	</X_Stability_-_dRoll_inverted>
 	<Mixture_2_-_x_direction>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
@@ -90,7 +90,7 @@
 	<Offset>2.5</Offset>
 	</Y_Stability_-_bPitch_inverted>
 	<Mixture_3_-_y_direction>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
