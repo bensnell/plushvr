@@ -71,6 +71,11 @@ void ofApp::setup(){
     outputParams.add(bOutputDirection.set("Output Direction", false));
     outputParams.add(bOutputMPU.set("Output MPU", false));
     
+    oscParams.setName("OSC Params");
+    oscParams.add(host.set("Host", "192.168.1.162"));
+    oscParams.add(port.set("Port", 6666));
+    oscParams.add(messageAddress.set("Msg Address", "plush"));
+    oscParams.add(bSendOsc.set("Send Osc", true));
     
     activity.setup("Activity - avg magntiude", 200, 0, 5);
     linearity.setup("Linearity - dYaw inverted", 200, 0, 5);
@@ -99,6 +104,7 @@ void ofApp::setup(){
     panels[0].add(ingrParams);
     panels[0].add(renderingParams);
     panels[0].add(outputParams);
+    panels[0].add(oscParams);
     panels[0].loadFromFile(genPanelFilename);
     
     panels[1].setup();
@@ -188,6 +194,10 @@ void ofApp::setup(){
     mpu.setup();
 #endif
 
+    
+    // ---------------- SETUP OSC -----------------
+    
+    sender.setup(host, port);
 
 }
 
@@ -255,6 +265,15 @@ void ofApp::update(){
             stringstream ss;
             ss << std::fixed << std::setprecision(2) << "Video FPS:\t" << ofToString(videoFPS.getFPS()) << "\tApp FPS\t" << ofToString(ofGetFrameRate()) << "\tMPU FPS:\t" << ofToString(mpuFPS.getFPS());
             cout << ss.str() << endl;
+        }
+        
+        // send osc message
+        if (bSendOsc) {
+            ofxOscMessage msg;
+            msg.setAddress(messageAddress);
+            msg.addFloatArg(movementForce.x);
+            msg.addFloatArg(movementForce.y);
+            sender.sendMessage(msg, false);
         }
     }
     videoFPS.update();

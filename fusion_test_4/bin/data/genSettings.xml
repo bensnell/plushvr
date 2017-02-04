@@ -60,4 +60,10 @@
 		<Output_MPU>0</Output_MPU>
 	</Output_Params>
 <General_Settings/>
+<OSC_Params>
+		<Host>192.168.1.162</Host>
+		<Port>6666</Port>
+		<Msg_Address>plush</Msg_Address>
+		<Send_Osc>1</Send_Osc>
+	</OSC_Params>
 </General_Settings>

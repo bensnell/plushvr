@@ -10,6 +10,7 @@
     #include "RPiVideoGrabber.h"
     #include "MPUController.h"
 #endif
+#include "ofxOsc.h"
 
 #ifndef max
 #define max(a, b) (((a) > (b)) ? (a) : (b))
@@ -103,6 +104,12 @@ class ofApp : public ofBaseApp{
     
     void drawPredictedMovement(int x, int y, int size);
     
+    // ------------------------
+    // -------- COMMS ---------
+    // ------------------------
+    
+    ofxOscSender sender;
+    
     
     // ------------------------
     // ------- SETTINGS -------
@@ -180,6 +187,12 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> bOutputFPS;
     ofParameter<bool> bOutputDirection;
     ofParameter<bool> bOutputMPU;
+    
+    ofParameterGroup oscParams;
+    ofParameter<string> host;
+    ofParameter<int> port;
+    ofParameter<string> messageAddress; // name in the address field of each message
+    ofParameter<bool> bSendOsc;
     
     // ------------------------
     // --------- UTILS --------
