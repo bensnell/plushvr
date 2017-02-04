@@ -754,6 +754,9 @@ void ofApp::efficientCalc() {
     
     // extract the direction and magnitude from mixtures 2 and 3 into the final movement vector
     movementForce.set(mixture2.getCook(), mixture3.getCook());
+    
+    
+    // APPLY A FINAL ADJUSTMENT TO THE FORCE MAGNITUDE BEFORE EXPORTING
 #endif
 }
 
