@@ -104,6 +104,7 @@ void ofApp::setup(){
     panels[0].add(ingrParams);
     panels[0].add(renderingParams);
     panels[0].add(outputParams);
+    panels[0].add(oscParams);
     panels[0].loadFromFile(genPanelFilename);
     
     panels[1].setup();
