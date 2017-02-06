@@ -83,7 +83,7 @@
 		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>12</Max>
-		<Power>1</Power>
+		<Power>0.5</Power>
 		<Invert>0</Invert>
 		<Difference>1</Difference>
 		<Easing>0.87</Easing>

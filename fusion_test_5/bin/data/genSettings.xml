@@ -31,7 +31,7 @@
 		<Num_Values>200</Num_Values>
 		<Store_History>0</Store_History>
 		<Output_Threshold>0.1</Output_Threshold>
-	<Skip_Small_Readings>1</Skip_Small_Readings>
+	<Skip_Small_Readings>0</Skip_Small_Readings>
 	</Ingredient_Params>
 	<Rendering_Params>
 		<Window_Width>800</Window_Width>
@@ -56,7 +56,7 @@
 		<Stride>5</Stride>
 		<Stretch>2</Stretch>
 		<Output_FPS>0</Output_FPS>
-		<Output_Direction>1</Output_Direction>
+		<Output_Direction>0</Output_Direction>
 		<Output_MPU>0</Output_MPU>
 	</Output_Params>
 <General_Settings/>
