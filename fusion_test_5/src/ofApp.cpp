@@ -62,6 +62,10 @@ void ofApp::setup(){
     renderingParams.add(bDrawArrow.set("Draw Arrow", true));
     renderingParams.add(bDrawCV.set("Draw CV", false));
     renderingParams.add(bDrawFlow.set("Draw Flow", false));
+    renderingParams.add(bDrawPosition.set("Draw Position", false));
+    renderingParams.add(positionScale.set("Position Scale", 3, 0.0001, 20));
+    renderingParams.add(nPositions.set("Num Positions", 100, 1, 1000));
+    renderingParams.add(positionSize.set("Pos Window Size", 500, 1, 1000));
 
     outputParams.setName("Output Params");
     outputParams.add(bOutputAscii.set("Output Ascii Video", false));
@@ -199,6 +203,9 @@ void ofApp::setup(){
     
     sender.setup(host, port);
     
+    // -------------- SETUP POSITION --------------
+    
+    posLine.addVertex(0, 0);
 }
 
 //--------------------------------------------------------------
@@ -252,6 +259,27 @@ void ofApp::update(){
             } else {
                 bPreviousFrame = true;
             }
+            
+            
+            // Optionally, integrate to find the position
+#ifdef __arm__
+            if (bDrawPosition) {
+                
+                // Rotate the movement force by the gyro direction
+                ofVec2f rotatedMotion = movementForce.getRotated(mpu.getYaw());
+                
+                // Add this new location to the line
+                posLine.addVertex(
+                               (posLine.getVertices().back()).x + positionScale * rotatedMotion.x,
+                               (posLine.getVertices().back()).y + positionScale * rotatedMotion.y);
+                
+                // keep the line to a certain size
+                if (posLine.size() > nPositions) {
+                    posLine.getVertices().erase(posLine.getVertices().begin(), posLine.getVertices().begin() + (posLine.size() - nPositions));
+                }
+            }
+#endif
+            
         }
         
         // Draw to the terminal
@@ -356,6 +384,22 @@ void ofApp::draw(){
         
         py += imgH*videoScale;
         width = max(width, imgW*videoScale);
+    }
+    if (bDrawPosition) {
+        if (py + positionSize > ofGetHeight()) {
+            px = width; // shouldn't this be px += width?
+            py = 0;
+        }
+        
+        // draw the integrated position
+        ofPushMatrix();
+        ofTranslate(positionSize/2, positionSize/2);
+        ofSetColor(255);
+        posLine.draw();
+        ofPopMatrix();
+        
+        py += positionSize;
+        width = max(width, (int)positionSize);
     }
     if (activity.bDraw) {
         if (py + ingrH > ofGetHeight()) {
@@ -500,6 +544,8 @@ void ofApp::updateDrawingSettings() {
         mixture2.bDraw = false;
         mixture3.bDraw = false;
         
+        bDrawPosition = false;
+        
     } else if (bDrawAll) {
         bDrawAll = false;
         bDrawNone = false;
@@ -522,6 +568,8 @@ void ofApp::updateDrawingSettings() {
         yStabilityPost.bDraw = true;
         mixture2.bDraw = true;
         mixture3.bDraw = true;
+        
+        bDrawPosition = true;
     }
 }
 

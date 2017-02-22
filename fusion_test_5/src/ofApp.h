@@ -178,6 +178,10 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> bDrawArrow;
     ofParameter<bool> bDrawCV;
     ofParameter<bool> bDrawFlow;
+    ofParameter<bool> bDrawPosition;    // draw the integrated position
+    ofParameter<float> positionScale;   // scale of each step
+    ofParameter<int> nPositions;        // number of vertices in polyline
+    ofParameter<int> positionSize;      // length and width of plot
     void updateDrawingSettings();
     
     ofParameterGroup outputParams;            // output to terminal
@@ -212,6 +216,9 @@ class ofApp : public ofBaseApp{
     // scale between 0 and 1
     // size must be odd
     void drawAsciiDirection(int size, float direction, float scale);
+    
+    // Drawing the Position
+    ofPolyline posLine;
     
     
 };

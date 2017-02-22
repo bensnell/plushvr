@@ -50,6 +50,7 @@
 		<Draw_Arrow>0</Draw_Arrow>
 		<Draw_CV>0</Draw_CV>
 		<Draw_Flow>0</Draw_Flow>
+	<Draw_Position>0</Draw_Position>
 	</Rendering_Params>
 	<Output_Params>
 		<Output_Ascii_Video>0</Output_Ascii_Video>
