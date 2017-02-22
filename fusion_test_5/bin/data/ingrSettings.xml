@@ -115,7 +115,7 @@
 		<Min>0</Min>
 		<Max>0.35</Max>
 		<Offset>0.05</Offset>
-		<Power>0.6</Power>
+		<Power>0.3</Power>
 		<Invert>1</Invert>
 		<Difference>0</Difference>
 		<Easing>0.75</Easing>

@@ -28,7 +28,7 @@
 		<Skipped_Pixels>3</Skipped_Pixels>
 	</Statistics_Params>
 	<Ingredient_Params>
-		<Num_Values>200</Num_Values>
+		<Num_Values>400</Num_Values>
 		<Store_History>0</Store_History>
 		<Output_Threshold>0.1</Output_Threshold>
 	<Skip_Small_Readings>0</Skip_Small_Readings>
