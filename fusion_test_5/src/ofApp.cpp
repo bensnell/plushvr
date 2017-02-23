@@ -69,6 +69,8 @@ void ofApp::setup(){
     renderingParams.add(posRotation.set("Pos Rotation", 0, -360, 360));
     renderingParams.add(posFlipX.set("Pos Flip X", false));
     renderingParams.add(posFlipY.set("Pos Flip Y", false));
+    renderingParams.add(posFlipYaw.set("Pos Flip Yaw", false));
+    renderingParams.add(posStrokeWidth.set("Pos Stroke Width", 3, 1, 10));
 
     outputParams.setName("Output Params");
     outputParams.add(bOutputAscii.set("Output Ascii Video", false));
@@ -398,7 +400,12 @@ void ofApp::draw(){
         ofPushMatrix();
         ofTranslate(positionSize/2, positionSize/2);
         ofSetColor(255);
+        ofSetLineWidth(posStrokeWidth);
         posLine.draw();
+        ofSetLineWidth(1);
+        ofSetColor(0, 0, 255);
+        ofDrawCircle(posLine.getVertices().back(), positionScale);
+        ofSetColor(255);
         ofPopMatrix();
         
         py += positionSize;

@@ -187,6 +187,7 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> posFlipX;         // flip vector in X
     ofParameter<bool> posFlipY;         // flip vector in Y
     ofParameter<bool> posFlipYaw;
+    ofParameter<float> posStrokeWidth;
     void updateDrawingSettings();
     
     ofParameterGroup outputParams;            // output to terminal

@@ -57,6 +57,8 @@
 		<Pos_Rotation>0</Pos_Rotation>
 		<Pos_Flip_X>0</Pos_Flip_X>
 		<Pos_Flip_Y>0</Pos_Flip_Y>
+	<Pos_Flip_Yaw>0</Pos_Flip_Yaw>
+		<Pos_Stroke_Width>3</Pos_Stroke_Width>
 	</Rendering_Params>
 	<Output_Params>
 		<Output_Ascii_Video>0</Output_Ascii_Video>
