@@ -66,6 +66,9 @@ void ofApp::setup(){
     renderingParams.add(positionScale.set("Position Scale", 3, 0.0001, 20));
     renderingParams.add(nPositions.set("Num Positions", 100, 1, 1000));
     renderingParams.add(positionSize.set("Pos Window Size", 500, 1, 1000));
+    renderingParams.add(posRotation.set("Pos Rotation", 0, -360, 360));
+    renderingParams.add(posFlipX.set("Pos Flip X", false));
+    renderingParams.add(posFlipY.set("Pos Flip Y", false));
 
     outputParams.setName("Output Params");
     outputParams.add(bOutputAscii.set("Output Ascii Video", false));
@@ -266,12 +269,12 @@ void ofApp::update(){
             if (bDrawPosition) {
                 
                 // Rotate the movement force by the gyro direction
-                ofVec2f rotatedMotion = movementForce.getRotated(mpu.getYaw());
+                ofVec2f rotatedMotion = movementForce.getRotated(mpu.getYaw() + posRotation);
                 
                 // Add this new location to the line
                 posLine.addVertex(
-                               (posLine.getVertices().back()).x + positionScale * rotatedMotion.x,
-                               (posLine.getVertices().back()).y + positionScale * rotatedMotion.y);
+                        (posLine.getVertices().back()).x + positionScale * rotatedMotion.x * (posFlipX ? -1. : 1.)),
+                        (posLine.getVertices().back()).y + positionScale * rotatedMotion.y * (posFlipY ? -1. : 1.));
                 
                 // keep the line to a certain size
                 if (posLine.size() > nPositions) {

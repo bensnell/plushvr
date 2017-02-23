@@ -51,6 +51,12 @@
 		<Draw_CV>0</Draw_CV>
 		<Draw_Flow>0</Draw_Flow>
 	<Draw_Position>0</Draw_Position>
+	<Position_Scale>3</Position_Scale>
+		<Num_Positions>100</Num_Positions>
+		<Pos_Window_Size>500</Pos_Window_Size>
+		<Pos_Rotation>0</Pos_Rotation>
+		<Pos_Flip_X>0</Pos_Flip_X>
+		<Pos_Flip_Y>0</Pos_Flip_Y>
 	</Rendering_Params>
 	<Output_Params>
 		<Output_Ascii_Video>0</Output_Ascii_Video>

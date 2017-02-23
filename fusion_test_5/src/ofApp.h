@@ -178,10 +178,14 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> bDrawArrow;
     ofParameter<bool> bDrawCV;
     ofParameter<bool> bDrawFlow;
+    // These are only rendering parameters (they don't affect motionForce):
     ofParameter<bool> bDrawPosition;    // draw the integrated position
     ofParameter<float> positionScale;   // scale of each step
     ofParameter<int> nPositions;        // number of vertices in polyline
     ofParameter<int> positionSize;      // length and width of plot
+    ofParameter<int> posRotation;       // rotate the impu yaw
+    ofParameter<bool> posFlipX;         // flip vector in X
+    ofParameter<bool> posFlipY;         // flip vector in Y
     void updateDrawingSettings();
     
     ofParameterGroup outputParams;            // output to terminal
