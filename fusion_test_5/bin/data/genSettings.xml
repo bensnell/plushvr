@@ -17,8 +17,8 @@
 		<Num_Levels>7</Num_Levels>
 		<Window_Size>20</Window_Size>
 		<Num_Iterations>1</Num_Iterations>
-		<Poly_N>5</Poly_N>
-		<Poly_Sigma>1.1</Poly_Sigma>
+		<Poly_N>7</Poly_N>
+		<Poly_Sigma>1.5</Poly_Sigma>
 		<Use_Gaussian>0</Use_Gaussian>
 		<Refresh_Params>0</Refresh_Params>
 	</Optical_Flow_Params>
@@ -44,20 +44,20 @@
 		<Draw_All>0</Draw_All>
 		<Draw_None>0</Draw_None>
 		<Draw_Gui>0</Draw_Gui>
-		<Draw_FPS>0</Draw_FPS>
+		<Draw_FPS>1</Draw_FPS>
 		<Draw_MPU>0</Draw_MPU>
 		<Draw_Video>0</Draw_Video>
 		<Draw_Arrow>0</Draw_Arrow>
 		<Draw_CV>0</Draw_CV>
 		<Draw_Flow>0</Draw_Flow>
 	<Draw_Position>0</Draw_Position>
-	<Position_Scale>5</Position_Scale>
-		<Num_Positions>300</Num_Positions>
+	<Position_Scale>30</Position_Scale>
+		<Num_Positions>100</Num_Positions>
 		<Pos_Window_Size>500</Pos_Window_Size>
 		<Pos_Rotation>0</Pos_Rotation>
 		<Pos_Flip_X>0</Pos_Flip_X>
 		<Pos_Flip_Y>0</Pos_Flip_Y>
-	<Pos_Flip_Yaw>0</Pos_Flip_Yaw>
+	<Pos_Flip_Yaw>1</Pos_Flip_Yaw>
 		<Pos_Stroke_Width>3</Pos_Stroke_Width>
 	</Rendering_Params>
 	<Output_Params>

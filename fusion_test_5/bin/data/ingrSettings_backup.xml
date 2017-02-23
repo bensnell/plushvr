@@ -6,7 +6,7 @@
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</Activity_-_avg_magntiude>
 	<Linearity_-_dYaw_inverted>
@@ -16,7 +16,7 @@
 		<Power>0.530612</Power>
 		<Invert>1</Invert>
 		<Difference>1</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</Linearity_-_dYaw_inverted>
 	<Reliability_-_extreme_tilt_inverted>
@@ -26,7 +26,7 @@
 		<Power>2.08163</Power>
 		<Invert>1</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</Reliability_-_extreme_tilt_inverted>
 	<Mixture1_-_magnitude_conf>
@@ -36,7 +36,7 @@
 		<Power>1.02041</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</Mixture1_-_magnitude_conf>
 	<X_Component_-_of_direction>
@@ -46,7 +46,7 @@
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</X_Component_-_of_direction>
 	<X_Stability_-_dRoll_inverted>
@@ -56,7 +56,7 @@
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>1</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.87</Easing>
 	<Offset>2.5</Offset>
 	</X_Stability_-_dRoll_inverted>
 	<Mixture_2_-_x_direction>
@@ -66,7 +66,7 @@
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</Mixture_2_-_x_direction>
 	<Y_Component_-_of_direction>
@@ -76,7 +76,7 @@
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</Y_Component_-_of_direction>
 	<Y_Stability_-_bPitch_inverted>
@@ -86,7 +86,7 @@
 		<Power>0.5</Power>
 		<Invert>0</Invert>
 		<Difference>1</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.87</Easing>
 	<Offset>2.5</Offset>
 	</Y_Stability_-_bPitch_inverted>
 	<Mixture_3_-_y_direction>
@@ -96,7 +96,7 @@
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	<Offset>0</Offset>
 	</Mixture_3_-_y_direction>
 <Ingr_Settings/>
@@ -118,6 +118,6 @@
 		<Power>0.3</Power>
 		<Invert>1</Invert>
 		<Difference>0</Difference>
-		<Easing>0.3</Easing>
+		<Easing>0.75</Easing>
 	</Y_Stability_Postprocessing>
 </Ingr_Settings>
