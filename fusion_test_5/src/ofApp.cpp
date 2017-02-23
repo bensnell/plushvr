@@ -269,7 +269,7 @@ void ofApp::update(){
             if (bDrawPosition) {
                 
                 // Rotate the movement force by the gyro direction
-                ofVec2f rotatedMotion = movementForce.getRotated(mpu.getYaw() + posRotation);
+                ofVec2f rotatedMotion = movementForce.getRotated((posFlipYaw ? -1 : 1) * mpu.getYaw() + posRotation);
                 
                 // Add this new location to the line
                 posLine.addVertex(

@@ -186,6 +186,7 @@ class ofApp : public ofBaseApp{
     ofParameter<int> posRotation;       // rotate the impu yaw
     ofParameter<bool> posFlipX;         // flip vector in X
     ofParameter<bool> posFlipY;         // flip vector in Y
+    ofParameter<bool> posFlipYaw;
     void updateDrawingSettings();
     
     ofParameterGroup outputParams;            // output to terminal
