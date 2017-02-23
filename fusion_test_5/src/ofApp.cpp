@@ -273,7 +273,7 @@ void ofApp::update(){
                 
                 // Add this new location to the line
                 posLine.addVertex(
-                        (posLine.getVertices().back()).x + positionScale * rotatedMotion.x * (posFlipX ? -1. : 1.)),
+                        (posLine.getVertices().back()).x + positionScale * rotatedMotion.x * (posFlipX ? -1. : 1.),
                         (posLine.getVertices().back()).y + positionScale * rotatedMotion.y * (posFlipY ? -1. : 1.));
                 
                 // keep the line to a certain size
