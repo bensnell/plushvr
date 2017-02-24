@@ -5,3 +5,7 @@ This is a fully-working test using beta priors on the last two mixtures. This di
 This also applies priors to every ingredient, though all may not be used.
 
 This also applies an optional beta weight to the prior to allow for higher betas for high values and faster rates of decay for lower values.
+
+**UPDATE**
+
+This app now works much faster and more reliably than fusion_5. The settings are also optimal for use with priors on the data.
