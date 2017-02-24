@@ -84,21 +84,21 @@
         <Prior_Mode>0</Prior_Mode>
     </X_Stability_-_dRoll_inverted>
     <X_Stability_Postprocessing>
-        <Draw>0</Draw>
+        <Draw>1</Draw>
         <Min>0</Min>
         <Max>0.35</Max>
         <Offset>0.05</Offset>
         <Power>0.85</Power>
-        <Invert>0</Invert>
+        <Invert>1</Invert>
         <Difference>0</Difference>
-        <Easing>0</Easing>
-        <Prior>0</Prior>
+        <Easing>0.4</Easing>
+        <Prior>1</Prior>
         <Alpha_Prior>0.0001</Alpha_Prior>
         <Beta_Prior>0.2</Beta_Prior>
-        <Prior_Mode>0</Prior_Mode>
+        <Prior_Mode>3</Prior_Mode>
     </X_Stability_Postprocessing>
     <Mixture_2_-_x_direction>
-        <Draw>0</Draw>
+        <Draw>1</Draw>
         <Min>0</Min>
         <Max>1</Max>
         <Power>1</Power>
@@ -112,7 +112,7 @@
         <Prior_Mode>1</Prior_Mode>
     </Mixture_2_-_x_direction>
     <Y_Component_-_of_direction>
-        <Draw>1</Draw>
+        <Draw>0</Draw>
         <Min>0</Min>
         <Max>1</Max>
         <Power>1</Power>
@@ -140,21 +140,21 @@
         <Prior_Mode>0</Prior_Mode>
     </Y_Stability_-_bPitch_inverted>
     <Y_Stability_Postprocessing>
-        <Draw>1</Draw>
+        <Draw>0</Draw>
         <Min>0</Min>
         <Max>0.35</Max>
         <Offset>0.05</Offset>
-        <Power>0.3</Power>
+        <Power>0.1</Power>
         <Invert>1</Invert>
         <Difference>0</Difference>
-        <Easing>0.4</Easing>
+        <Easing>0.6</Easing>
         <Prior>1</Prior>
         <Alpha_Prior>0.0001</Alpha_Prior>
         <Beta_Prior>0.2</Beta_Prior>
         <Prior_Mode>3</Prior_Mode>
     </Y_Stability_Postprocessing>
     <Mixture_3_-_y_direction>
-        <Draw>1</Draw>
+        <Draw>0</Draw>
         <Min>0</Min>
         <Max>1</Max>
         <Power>1</Power>
