@@ -6,11 +6,11 @@
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.204082</Easing>
+		<Easing>0.397959</Easing>
 	<Offset>0</Offset>
 	<Prior>1</Prior>
 		<Alpha_Prior>0.0001</Alpha_Prior>
-		<Beta_Prior>0.0001</Beta_Prior>
+		<Beta_Prior>0.204178</Beta_Prior>
 	</Mix>
 <Settings/>
 </Settings>

@@ -38,11 +38,11 @@ void ofApp::update(){
         
 
         
-        mix.average();
+        mix.prior();
         
         mix.taste();
         
-        mix.prior();
+        mix.average();
         
         mix.doneCooking();
     }
