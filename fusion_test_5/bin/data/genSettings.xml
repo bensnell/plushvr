@@ -42,9 +42,9 @@
 		<Ingr_Height>150</Ingr_Height>
 		<Video_Scale>4</Video_Scale>
 		<Draw_All>0</Draw_All>
-		<Draw_None>0</Draw_None>
+		<Draw_None>1</Draw_None>
 		<Draw_Gui>0</Draw_Gui>
-		<Draw_FPS>1</Draw_FPS>
+		<Draw_FPS>0</Draw_FPS>
 		<Draw_MPU>0</Draw_MPU>
 		<Draw_Video>0</Draw_Video>
 		<Draw_Arrow>0</Draw_Arrow>
@@ -64,7 +64,7 @@
 		<Output_Ascii_Video>0</Output_Ascii_Video>
 		<Stride>5</Stride>
 		<Stretch>2</Stretch>
-		<Output_FPS>0</Output_FPS>
+		<Output_FPS>1</Output_FPS>
 		<Output_Direction>0</Output_Direction>
 		<Output_MPU>0</Output_MPU>
 	</Output_Params>

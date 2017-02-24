@@ -154,6 +154,6 @@
 		<Easing>0.3</Easing>
 	<Prior>1</Prior>
 		<Alpha_Prior>0.0001</Alpha_Prior>
-		<Beta_Prior>0.0001</Beta_Prior>
+		<Beta_Prior>0.01</Beta_Prior>
 	</Y_Stability_Postprocessing>
 </Ingr_Settings>
