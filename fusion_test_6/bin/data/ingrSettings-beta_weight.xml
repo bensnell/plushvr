@@ -84,7 +84,7 @@
 	<Weight_Beta>0</Weight_Beta>
 	</X_Stability_-_dRoll_inverted>
 	<Mixture_2_-_x_direction>
-		<Draw>0</Draw>
+		<Draw>1</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
@@ -98,7 +98,7 @@
 	<Weight_Beta>1</Weight_Beta>
 	</Mixture_2_-_x_direction>
 	<Y_Component_-_of_direction>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
@@ -155,7 +155,7 @@
 	<Weight_Beta>0</Weight_Beta>
 	</X_Stability_Postprocessing>
 	<Y_Stability_Postprocessing>
-		<Draw>1</Draw>
+		<Draw>0</Draw>
 		<Min>0</Min>
 		<Max>0.35</Max>
 		<Offset>0.05</Offset>
@@ -163,9 +163,9 @@
 		<Invert>1</Invert>
 		<Difference>0</Difference>
 		<Easing>0</Easing>
-	<Prior>1</Prior>
+	<Prior>0</Prior>
 		<Alpha_Prior>0.0001</Alpha_Prior>
-		<Beta_Prior>0.0001</Beta_Prior>
+		<Beta_Prior>0.2</Beta_Prior>
 	<Weight_Beta>0</Weight_Beta>
 	</Y_Stability_Postprocessing>
 </Ingr_Settings>

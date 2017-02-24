@@ -39,7 +39,7 @@
 		<Norm_Hist>0</Norm_Hist>
 		<Norm_Hist_Scale>45</Norm_Hist_Scale>
 		<Ingr_Width>800</Ingr_Width>
-		<Ingr_Height>300</Ingr_Height>
+		<Ingr_Height>150</Ingr_Height>
 		<Video_Scale>4</Video_Scale>
 		<Draw_All>0</Draw_All>
 		<Draw_None>0</Draw_None>
@@ -59,6 +59,7 @@
 		<Pos_Flip_Y>0</Pos_Flip_Y>
 	<Pos_Flip_Yaw>1</Pos_Flip_Yaw>
 		<Pos_Stroke_Width>3</Pos_Stroke_Width>
+	<Draw_Force_Vector>0</Draw_Force_Vector>
 	</Rendering_Params>
 	<Output_Params>
 		<Output_Ascii_Video>0</Output_Ascii_Video>
@@ -67,6 +68,7 @@
 		<Output_FPS>0</Output_FPS>
 		<Output_Direction>0</Output_Direction>
 		<Output_MPU>0</Output_MPU>
+	<Output_Force_Vector>0</Output_Force_Vector>
 	</Output_Params>
 <General_Settings/>
 <OSC_Params>
