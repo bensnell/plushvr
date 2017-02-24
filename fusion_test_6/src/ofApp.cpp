@@ -836,13 +836,22 @@ void ofApp::efficientCalc() {
     
     // add the x values
     // attenuate if vectors are pointing in the same direction
+//    if (xComponent.getCook() > 0 && xStabilityPost.getCook() > 0) {
+//        mixture2.addRaw(xComponent.getCook() * xStabilityPost.getCook() * mixture1.getCook());
+//    } else if (xComponent.getCook() < 0 && xStabilityPost.getCook() < 0) {
+//        mixture2.addRaw(- xComponent.getCook() * xStabilityPost.getCook() * mixture1.getCook());
+//    } else {        // don't apply gain if tilt is supporting cam prediction
+//        mixture2.addRaw(xComponent.getCook() * mixture1.getCook());
+//    } // original
+    
     if (xComponent.getCook() > 0 && xStabilityPost.getCook() > 0) {
-        mixture2.addRaw(xComponent.getCook() * xStabilityPost.getCook() * mixture1.getCook());
+        mixture2.addRaw(xComponent.getCook() * (1-xStabilityPost.getCook()) * mixture1.getCook());
     } else if (xComponent.getCook() < 0 && xStabilityPost.getCook() < 0) {
-        mixture2.addRaw(- xComponent.getCook() * xStabilityPost.getCook() * mixture1.getCook());
+        mixture2.addRaw(xComponent.getCook() * (1+xStabilityPost.getCook()) * mixture1.getCook());
     } else {        // don't apply gain if tilt is supporting cam prediction
         mixture2.addRaw(xComponent.getCook() * mixture1.getCook());
-    }
+    } // changed
+    
     mixture2.normalize();
     mixture2.taste();
     mixture2.sensitize();
