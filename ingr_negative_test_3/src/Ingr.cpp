@@ -28,6 +28,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     params.add(bPrior.set("Prior", false));
     params.add(alpha.set("Alpha Prior", 0.01, 0.0001, 5));
     params.add(beta.set("Beta Prior", 0.01, 0.0001, 5));
+    params.add(twoSidedPriorMode.set("Prior Mode", 0, 0, 3));
     
     setNumValues(_nValues);
     
@@ -41,6 +42,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     bPrior.addListener(this, &Ingr::updateBool);
     alpha.addListener(this, &Ingr::updateFloat);
     beta.addListener(this, &Ingr::updateFloat);
+    twoSidedPriorMode.addListener(this, &Ingr::updateInt);
 }
 
 // -----------------------------------------------------------
@@ -254,20 +256,29 @@ float Ingr::priorCalc(float _thisValue, float *_prevInputPrior, float *_prevOutp
     // probability depends on previous input values to this function, not output values
     float probability;
     if (bTwoSided) {    // two sided distribution
-        probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta); // original algo
 
-        // alt
-        // weights beta based on _thisValue
-//        probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + abs(_thisValue)*_beta);
-
-
+        // choose the appropriate mode for doing the prior on a two-sided distribution
+        switch (twoSidedPriorMode) {
+            case 0:     // bounce
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta);
+                break;
+            case 1:     // bounce, self-adjusting
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + abs(_thisValue)*_beta);
+                break;
+            case 3:     // settle, self-adjusting
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + abs(*_prevInputPrior) + _alpha + abs(_thisValue)*_beta);
+                break;
+            case 2:     // settle
+            default:
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + abs(*_prevInputPrior) + _alpha + _beta);
+                break;
+        }
+        
     } else {            // one sided distribution
         probability = (_thisValue + _alpha) / (_thisValue + *_prevInputPrior + _alpha + _beta);
     }
     
     // optionally, easing can be applied to the probability to more drastically separate the highs from the lows
-    
-    cout << probability << endl;
     
     // calculate the new prior
     // this depends on the probability and the previous output prior
@@ -336,6 +347,12 @@ void Ingr::updateFloat(float &value) {
 
 // -----------------------------------------------------------
 void Ingr::updateBool(bool &value) {
+    
+    refresh();
+}
+
+// -----------------------------------------------------------
+void Ingr::updateInt(int &value) {
     
     refresh();
 }

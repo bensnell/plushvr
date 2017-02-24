@@ -24,11 +24,18 @@ void ofApp::update(){
 //        mix.addRaw(thisVal);
         
         
+//        if (((int)ofGetElapsedTimef()/2)%2 == 1) {
+//            mix.addRaw(ofRandom(1));
+//        } else {
+//            mix.addRaw(ofRandom(0.01));
+//        }
+        
         if (((int)ofGetElapsedTimef()/2)%2 == 1) {
-            mix.addRaw(ofRandom(1));
+            mix.addRaw(2*(ofGetFrameNum()%2-0.5));
         } else {
-            mix.addRaw(ofRandom(0.01));
+            mix.addRaw(ofRandom(0.6, 1));
         }
+        
         
 
 //        mix.addRaw(ofGetFrameNum()%2);

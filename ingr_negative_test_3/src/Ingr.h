@@ -88,6 +88,12 @@ public:
     ofParameter<float> alpha;   // can't be zero
     ofParameter<float> beta;    // can't be zero
     ofParameter<bool> bPrior;
+    ofParameter<int> twoSidedPriorMode; // algorithm used for two-sided distributions
+    // MODES
+    // 0    bounce --> bounces quickly between negative and positive values
+    // 1    bounce, self-adjusting --> bounces quickly, rate of easing depends on most recent value by weighting beta on current value
+    // 2    settle --> preference for zero, hard to switch betwen negative and positive values quickly
+    // 3    settle, self-adjusting --> preference for zero, weights beta
     
     void doneCooking(); // signal that cook can be stored
     
@@ -112,6 +118,7 @@ public:
     
     void updateFloat(float &value);
     void updateBool(bool &value);
+    void updateInt(int &value);
     
     // recalculate all values
     bool bRefresh = true;

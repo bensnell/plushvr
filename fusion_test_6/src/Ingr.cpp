@@ -28,7 +28,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     params.add(bPrior.set("Prior", false));
     params.add(alpha.set("Alpha Prior", 0.01, 0.0001, 5));
     params.add(beta.set("Beta Prior", 0.01, 0.0001, 5));
-    params.add(bWeightBeta.set("Weight Beta", false));
+    params.add(twoSidedPriorMode.set("Prior Mode", 0, 0, 3));
     
     setNumValues(_nValues);
     
@@ -42,7 +42,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     bPrior.addListener(this, &Ingr::updateBool);
     alpha.addListener(this, &Ingr::updateFloat);
     beta.addListener(this, &Ingr::updateFloat);
-    bWeightBeta.addListener(this, &Ingr::updateBool);
+    twoSidedPriorMode.addListener(this, &Ingr::updateInt);
 }
 
 // -----------------------------------------------------------
@@ -257,13 +257,21 @@ float Ingr::priorCalc(float _thisValue, float *_prevInputPrior, float *_prevOutp
     float probability;
     if (bTwoSided) {    // two sided distribution
 
-        if (bWeightBeta) {
-            // weights distribution based on _thisValue
-            probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + abs(_thisValue)*_beta);
-        } else {
-            // normal algorithm
-            probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta);
-
+        // choose the appropriate mode for doing the prior on a two-sided distribution
+        switch (twoSidedPriorMode) {
+            case 0:     // bounce
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta);
+                break;
+            case 1:     // bounce, self-adjusting
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + abs(_thisValue)*_beta);
+                break;
+            case 2:     // settle
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + abs(*_prevInputPrior) + _alpha + _beta);
+                break;
+            case 3:     // settle, self-adjusting
+            default:
+                probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + abs(*_prevInputPrior) + _alpha + abs(_thisValue)*_beta);
+                break;
         }
         
     } else {            // one sided distribution
@@ -339,6 +347,12 @@ void Ingr::updateFloat(float &value) {
 
 // -----------------------------------------------------------
 void Ingr::updateBool(bool &value) {
+    
+    refresh();
+}
+
+// -----------------------------------------------------------
+void Ingr::updateInt(int &value) {
     
     refresh();
 }
