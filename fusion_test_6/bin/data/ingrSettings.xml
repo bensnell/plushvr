@@ -39,7 +39,7 @@
 		<Beta_Prior>0.01</Beta_Prior>
 	</Reliability_-_extreme_tilt_inverted>
 	<Mixture1_-_magnitude_conf>
-		<Draw>0</Draw>
+		<Draw>1</Draw>
 		<Min>0.0714286</Min>
 		<Max>1</Max>
 		<Power>1.02041</Power>
@@ -47,9 +47,9 @@
 		<Difference>0</Difference>
 		<Easing>0</Easing>
 	<Offset>0</Offset>
-	<Prior>0</Prior>
-		<Alpha_Prior>0.01</Alpha_Prior>
-		<Beta_Prior>0.01</Beta_Prior>
+	<Prior>1</Prior>
+		<Alpha_Prior>0.0001</Alpha_Prior>
+		<Beta_Prior>0.0001</Beta_Prior>
 	</Mixture1_-_magnitude_conf>
 	<X_Component_-_of_direction>
 		<Draw>0</Draw>
@@ -78,17 +78,17 @@
 		<Beta_Prior>0.01</Beta_Prior>
 	</X_Stability_-_dRoll_inverted>
 	<Mixture_2_-_x_direction>
-		<Draw>0</Draw>
+		<Draw>1</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0</Easing>
+		<Easing>0.4</Easing>
 	<Offset>0</Offset>
-	<Prior>0</Prior>
-		<Alpha_Prior>0.01</Alpha_Prior>
-		<Beta_Prior>0.01</Beta_Prior>
+	<Prior>1</Prior>
+		<Alpha_Prior>0.0001</Alpha_Prior>
+		<Beta_Prior>0.0001</Beta_Prior>
 	</Mixture_2_-_x_direction>
 	<Y_Component_-_of_direction>
 		<Draw>0</Draw>
@@ -117,17 +117,17 @@
 		<Beta_Prior>0.01</Beta_Prior>
 	</Y_Stability_-_bPitch_inverted>
 	<Mixture_3_-_y_direction>
-		<Draw>0</Draw>
+		<Draw>1</Draw>
 		<Min>0</Min>
 		<Max>1</Max>
 		<Power>1</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0</Easing>
+		<Easing>0.4</Easing>
 	<Offset>0</Offset>
-	<Prior>0</Prior>
-		<Alpha_Prior>0.01</Alpha_Prior>
-		<Beta_Prior>0.01</Beta_Prior>
+	<Prior>1</Prior>
+		<Alpha_Prior>0.0001</Alpha_Prior>
+		<Beta_Prior>0.0001</Beta_Prior>
 	</Mixture_3_-_y_direction>
 <Ingr_Settings/>
 <X_Stability_Postprocessing>
@@ -138,8 +138,8 @@
 		<Power>0.85</Power>
 		<Invert>0</Invert>
 		<Difference>0</Difference>
-		<Easing>0.4</Easing>
-	<Prior>1</Prior>
+		<Easing>0</Easing>
+	<Prior>0</Prior>
 		<Alpha_Prior>0.0001</Alpha_Prior>
 		<Beta_Prior>0.2</Beta_Prior>
 	</X_Stability_Postprocessing>
@@ -151,8 +151,8 @@
 		<Power>0.3</Power>
 		<Invert>1</Invert>
 		<Difference>0</Difference>
-		<Easing>0.4</Easing>
-	<Prior>1</Prior>
+		<Easing>0</Easing>
+	<Prior>0</Prior>
 		<Alpha_Prior>0.0001</Alpha_Prior>
 		<Beta_Prior>0.2</Beta_Prior>
 	</Y_Stability_Postprocessing>
