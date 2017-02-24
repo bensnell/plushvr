@@ -813,6 +813,8 @@ void ofApp::efficientCalc() {
     mixture2.taste();
     mixture2.sensitize();
     mixture2.average();
+    mixture2.taste();
+    mixture2.prior();
     mixture2.doneCooking();
     
     // combine the y values
@@ -827,20 +829,20 @@ void ofApp::efficientCalc() {
     mixture3.taste();
     mixture3.sensitize();
     mixture3.average();
+    mixture3.taste();
+    mixture3.prior();
     mixture3.doneCooking();
     
     // extract the direction and magnitude from mixtures 2 and 3 into the final movement vector
     movementForce.set(mixture2.getCook(), mixture3.getCook());
     
-    
-    // APPLY A FINAL ADJUSTMENT TO THE FORCE MAGNITUDE BEFORE EXPORTING
 #endif
 }
 
 //--------------------------------------------------------------
 void ofApp::drawBody(int x, int y, int w, int h) {
     
-    ofPushMatrix();ofPushStyle();
+    ofPushMatrix(); ofPushStyle();
     
     ofTranslate(x, y);
     
