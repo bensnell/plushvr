@@ -254,13 +254,20 @@ float Ingr::priorCalc(float _thisValue, float *_prevInputPrior, float *_prevOutp
     // probability depends on previous input values to this function, not output values
     float probability;
     if (bTwoSided) {    // two sided distribution
-        probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta);
+        probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta); // original algo
+
+        // alt
+        // weights beta based on _thisValue
+//        probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + abs(_thisValue)*_beta);
+
 
     } else {            // one sided distribution
         probability = (_thisValue + _alpha) / (_thisValue + *_prevInputPrior + _alpha + _beta);
     }
     
     // optionally, easing can be applied to the probability to more drastically separate the highs from the lows
+    
+    cout << probability << endl;
     
     // calculate the new prior
     // this depends on the probability and the previous output prior

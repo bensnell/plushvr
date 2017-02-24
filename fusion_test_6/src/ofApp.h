@@ -174,6 +174,7 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> bDrawGui;
     ofParameter<bool> bDrawFPS;
     ofParameter<bool> bDrawMPU;
+    ofParameter<bool> bDrawForce;      // print the motion vectors
     ofParameter<bool> bDrawVideo;
     ofParameter<bool> bDrawArrow;
     ofParameter<bool> bDrawCV;
@@ -197,6 +198,7 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> bOutputFPS;
     ofParameter<bool> bOutputDirection;
     ofParameter<bool> bOutputMPU;
+    ofParameter<bool> bOutputForce;
     
     ofParameterGroup oscParams;
     ofParameter<string> host;

@@ -58,6 +58,7 @@ void ofApp::setup(){
     renderingParams.add(bDrawGui.set("Draw Gui", false));
     renderingParams.add(bDrawFPS.set("Draw FPS", true));
     renderingParams.add(bDrawMPU.set("Draw MPU", false));
+    renderingParams.add(bDrawForce.set("Draw Force Vector", false));
     renderingParams.add(bDrawVideo.set("Draw Video", true));
     renderingParams.add(bDrawArrow.set("Draw Arrow", true));
     renderingParams.add(bDrawCV.set("Draw CV", false));
@@ -79,6 +80,7 @@ void ofApp::setup(){
     outputParams.add(bOutputFPS.set("Output FPS", false));
     outputParams.add(bOutputDirection.set("Output Direction", false));
     outputParams.add(bOutputMPU.set("Output MPU", false));
+    outputParams.add(bOutputForce.set("Output Force Vector", false));
     
     oscParams.setName("OSC Params");
     oscParams.add(host.set("Host", "192.168.1.162"));
@@ -300,6 +302,11 @@ void ofApp::update(){
             cout << ss.str() << endl;
         }
         
+        // output motion vector force
+        if (bOutputForce) {
+            cout << "Force X: " << movementForce.x << "\tY: " << movementForce.y << endl;
+        }
+        
         // send osc message
         if (bSendOsc) {
             ofxOscMessage msg;
@@ -339,6 +346,13 @@ void ofApp::draw(){
         py += 25;
     }
 #endif
+    if (bDrawForce) {
+        stringstream ss;
+        ss << "Force X: " << movementForce.x << "\tY: " << movementForce.y;
+        ofDrawBitmapStringHighlight(ss.str(), 0, py+20);
+        
+        py += 25;
+    }
     if (bDrawVideo) {
         
         // draw video
@@ -703,6 +717,8 @@ void ofApp::efficientCalc() {
     activity.normalize();
     activity.taste();
     activity.sensitize();
+    activity.prior();
+    activity.taste();
     activity.average();
     activity.doneCooking();
     
@@ -715,6 +731,8 @@ void ofApp::efficientCalc() {
     linearity.taste();
     linearity.invert();
     linearity.sensitize();
+    linearity.prior();
+    linearity.taste();
     linearity.average();
     linearity.doneCooking();
     
@@ -726,6 +744,8 @@ void ofApp::efficientCalc() {
     reliability.invert();
     reliability.taste();
     reliability.sensitize();
+    reliability.prior();
+    reliability.taste();
     reliability.average();
     reliability.doneCooking();
     
@@ -735,6 +755,8 @@ void ofApp::efficientCalc() {
     mixture1.normalize(); // superfluous
     mixture1.taste();
     mixture1.sensitize();
+    mixture1.prior();
+    mixture1.taste();
     mixture1.average();
     mixture1.doneCooking();
     
@@ -751,11 +773,15 @@ void ofApp::efficientCalc() {
     xComponent.addRaw(avgComp.x);
     xComponent.normalize(); // superfluous
     xComponent.taste();
+    xComponent.prior();
+    xComponent.taste();
     xComponent.average();
     xComponent.doneCooking();
 
     yComponent.addRaw(avgComp.y);
     yComponent.normalize(); // superfluous
+    yComponent.taste();
+    yComponent.prior();
     yComponent.taste();
     yComponent.average();
     yComponent.doneCooking();
@@ -766,8 +792,10 @@ void ofApp::efficientCalc() {
     xStability.normalize();
     xStability.taste();
     xStability.invert(); // does this apply the flip?
-    xStability.average();
+    xStability.prior();
+    xStability.taste();
     xStability.sensitize();
+    xStability.average();
     xStability.doneCooking();
     
     yStability.addRaw(mpu.getPitch());
@@ -775,6 +803,8 @@ void ofApp::efficientCalc() {
     yStability.normalize();
     yStability.taste();
     yStability.invert();
+    yStability.prior();
+    yStability.taste();
     yStability.sensitize();
     yStability.average();
     yStability.doneCooking();
@@ -785,6 +815,8 @@ void ofApp::efficientCalc() {
     xStabilityPost.taste();
     xStabilityPost.invert();
     xStabilityPost.sensitize();
+    xStabilityPost.prior();
+    xStabilityPost.taste();
     xStabilityPost.average();
     xStabilityPost.doneCooking();
     
@@ -793,6 +825,8 @@ void ofApp::efficientCalc() {
     yStabilityPost.taste();
     yStabilityPost.invert();
     yStabilityPost.sensitize();
+    yStabilityPost.prior();
+    yStabilityPost.taste();
     yStabilityPost.average();
     yStabilityPost.doneCooking();
     

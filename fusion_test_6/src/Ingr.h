@@ -88,6 +88,7 @@ public:
     ofParameter<float> alpha;   // can't be zero
     ofParameter<float> beta;    // can't be zero
     ofParameter<bool> bPrior;
+    ofParameter<bool> bWeightBeta; // testing if this works
     
     void doneCooking(); // signal that cook can be stored
     

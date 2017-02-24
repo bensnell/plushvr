@@ -19,9 +19,17 @@ void ofApp::update(){
     
     if (!bPause) {
         
-        float thisVal = (0.9 * cos(ofGetElapsedTimef()) + ofRandom(-.1, .1)) * ((ofRandom(3) < 1.5) ? ofRandom(0.05, 0.3) : 1);
+//        float thisVal = (0.9 * cos(ofGetElapsedTimef()) + ofRandom(-.1, .1)) * ((ofRandom(3) < 1.5) ? ofRandom(0.05, 0.3) : 1);
 //        cout << thisVal << ", ";
-        mix.addRaw(thisVal);
+//        mix.addRaw(thisVal);
+        
+        
+        if (((int)ofGetElapsedTimef()/2)%2 == 1) {
+            mix.addRaw(ofRandom(1));
+        } else {
+            mix.addRaw(ofRandom(0.01));
+        }
+        
 
 //        mix.addRaw(ofGetFrameNum()%2);
         

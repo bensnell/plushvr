@@ -28,6 +28,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     params.add(bPrior.set("Prior", false));
     params.add(alpha.set("Alpha Prior", 0.01, 0.0001, 5));
     params.add(beta.set("Beta Prior", 0.01, 0.0001, 5));
+    params.add(bWeightBeta.set("Weight Beta", false));
     
     setNumValues(_nValues);
     
@@ -41,6 +42,7 @@ void Ingr::setup(string _name, int _nValues, float inLowerBound, float inUpperBo
     bPrior.addListener(this, &Ingr::updateBool);
     alpha.addListener(this, &Ingr::updateFloat);
     beta.addListener(this, &Ingr::updateFloat);
+    bWeightBeta.addListener(this, &Ingr::updateBool);
 }
 
 // -----------------------------------------------------------
@@ -254,8 +256,16 @@ float Ingr::priorCalc(float _thisValue, float *_prevInputPrior, float *_prevOutp
     // probability depends on previous input values to this function, not output values
     float probability;
     if (bTwoSided) {    // two sided distribution
-        probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta);
 
+        if (bWeightBeta) {
+            // weights distribution based on _thisValue
+            probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + abs(_thisValue)*_beta);
+        } else {
+            // normal algorithm
+            probability = (abs(_thisValue) + _alpha) / (abs(_thisValue) + (((*_prevInputPrior > 0 && _thisValue < 0) || (*_prevInputPrior < 0 && _thisValue > 0)) ? 0 : abs(*_prevInputPrior)) + _alpha + _beta);
+
+        }
+        
     } else {            // one sided distribution
         probability = (_thisValue + _alpha) / (_thisValue + *_prevInputPrior + _alpha + _beta);
     }
